@@ -1,1 +1,2 @@
-__author__ = 'melalonso'
+class HostConfig:
+    WKS = "../config/routers.csv"

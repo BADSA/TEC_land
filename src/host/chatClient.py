@@ -15,18 +15,22 @@ import json
 
 
 class ChatClient(protocol.Protocol):
+
     def connectionMade(self):
-        self.registerUser()
+        print "Connection made"
+        self.register_user()
 
     def dataReceived(self, data):
+        print "***********************"
+        print "New message received: "
         print data
-        # self.transport.loseConnection()
+        print "***********************"
 
-    def registerUser(self):
+    def register_user(self):
         print "TEC-land network online..."
         username = raw_input("Please write an username to use: ")
         data = {"type": 'r', "username": username}
         self.transport.write(json.dumps(data))
 
-    def getRouterIp(self):
-        pass
+    def send_data(self, data):
+        self.transport.write(data)

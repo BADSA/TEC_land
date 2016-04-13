@@ -15,7 +15,7 @@ class HostManager:
             fieldnames = ['username', 'ip', 'port']
             hosts = csv.DictReader(hosts_file, fieldnames=fieldnames)
             for host in hosts:
-                print host
+                #print host
                 self.hosts.append(host)
 
     def exists(self, username):
@@ -30,7 +30,7 @@ class HostManager:
 
     def register(self, host):
         exists = self.exists(host["username"])
-        print exists
+        print "User already exists"
         fieldnames = ['username', 'ip', 'port']
         hosts_file = open(self.hosts_file, "a")
         writer = csv.DictWriter(hosts_file, fieldnames=fieldnames)
@@ -45,7 +45,9 @@ class HostManager:
 
     def delete(self, username):
         newlist = [host for host in self.hosts if not host["username"] == username]
+        self.hosts = newlist
         fieldnames = ['username', 'ip', 'port']
         hosts_file = open(self.hosts_file, "w")
         writer = csv.DictWriter(hosts_file, fieldnames=fieldnames)
         writer.writerows(newlist)
+

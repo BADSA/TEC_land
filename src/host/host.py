@@ -1,18 +1,29 @@
-from twisted.internet import protocol, reactor
+# coding=utf-8
+"""
+Instituto Tecnológico de Costa Rica
+Ingeniería en Computación
+Redes de Computadoras
+Profesor: Kevin Moraga
+Estudiantes:
+    Daniel Solís Méndez
+    Melvin Elizondo Pérez
+I Semestre 2016
+"""
+
+from twisted.internet import reactor
 from hostFactory import HostFactory
 
 
 class Host:
 
-    def __init__(self, ip, port):
+    def __init__(self):
         self.factory = HostFactory()
-        self.routerIp = ip
-        self.routerPort = port
 
-    def connect(self):
-        print "TEC-land host connecting to {0}:{1}".format(self.routerIp, self.routerPort)
-        reactor.connectTCP(self.routerIp, self.routerPort, self.factory)
+    def connect(self, ip, port):
+        print "TEC-land host connecting to {0}:{1}".format(ip, port)
+        reactor.connectTCP(ip, port, self.factory)
+        reactor.run()
 
     def send_message(self, msg):
         data = {"from": msg.mfrom, "to": msg.to, "hashtags": msg.hashtags, "msg": msg.text}
-        self.factory.p.sendData(data)
+        self.factory.p.send_data(data)

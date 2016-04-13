@@ -10,18 +10,19 @@ Estudiantes:
 I Semestre 2016
 """
 
-from helperRouter import Router
 import argparse
 import csv, json, socket
+from host import Host
+from model.message import Message
+from config import HostConfig
 
 
-class ConnectionManager:
-    def __init__(self, wks="routers.csv"):
+class ConnectionFinder:
+    def __init__(self, wks=HostConfig.WKS):
         self.wks_file = wks
-        self.routers = self.readWKS()
-        self.helperRouter = Router()
+        self.routers = self.read_wks()
 
-    def readWKS(self):  # Well Known Servers/Routers
+    def read_wks(self):  # Well Known Servers/Routers
         list = []
         with open(self.wks_file) as wks_file:
             fieldnames = ['name', 'ip', 'port']
@@ -30,7 +31,7 @@ class ConnectionManager:
                 list.append(router)
         return list
 
-    def lookForRouter(self):
+    def look_for_router(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         for router in self.routers:
             try:
@@ -45,13 +46,8 @@ class ConnectionManager:
 
         data = s.recv(2048)
         s.close()
+        data = json.loads(data)
         return [data["ip"], data["port"]]
-
-    @staticmethod
-    def connect(ip, port):
-        print "TEC-land host connecting to {0}:{1}".format(ip, port)
-        # reactor.connectTCP(ip, port, HostFactory())
-        # reactor.run()
 
 
 if __name__ == '__main__':
@@ -59,15 +55,22 @@ if __name__ == '__main__':
     # Optional router ip & port to connect.
     parse.add_argument("-i", "--ip", type=str, help="Router's IP to connect.")
     parse.add_argument("-p", "--port", type=int, help="Router's port number to connect.")
-    parse.add_argument("-f", "--file", type=argparse.FileType('r'), help="Routers' ip and port file",
-                       default="routers.csv")
     args = parse.parse_args()
-    conMan = ConnectionManager()
+    conMan = ConnectionFinder()
 
+    host = Host()
     # Connect to given router
     if args.ip and args.port:
-        conMan.connect(args.ip, args.port)
+        host.connect(args.ip, args.port)
     else:
         print "Dynamic Binding"
-        ip, port = conMan.lookForRouter()
-        conMan.connect(ip, port)
+        ip, port = conMan.look_for_router()
+        print "Voy pa {0}:{1}".format(ip, port)
+        host.connect(ip, port)
+
+    while 1:
+        to = raw_input("Write the name of the username: ")
+        text = raw_input("Write the message: ")
+        mfrom = "melalonso"
+        msg = Message(mfrom, to, text)
+        host.send_message(msg)

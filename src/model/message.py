@@ -11,4 +11,4 @@ class MSG:
         words = self.msg.split(' ')
         for word in words:
             if word[0] == '#':
-                self.hashtags.append(word[:1])
+                self.hashtags.append(word[1:])
