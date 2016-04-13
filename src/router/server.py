@@ -32,8 +32,11 @@ class Router(protocol.Protocol):
             else:
                 self.transport.write("Username already taken")
                 self.username = ""
-        else:
-            self.transport.write("Not supported")
+        elif data["type"] == "n":
+            # ip, port = getRouterLessCharged()
+            # data = {"ip": ip, "port": port}
+            data = {"ip": "127.0.0.1", "port": 8000}
+            self.transport.write(json.dumps(data))
 
     def parse_data(self, data):
         pass
@@ -53,7 +56,7 @@ class RouterFactory(protocol.Factory):
 if __name__ == '__main__':
     parse = argparse.ArgumentParser()
     parse.add_argument("-p", type=int,  help="router port number")
-    parse.add_argument("-f", type=argparse.FileType('r'),  help="routers ip and ports file", default="routers")
+    parse.add_argument("-f", type=argparse.FileType('r'),  help="routers ip and ports file", default="../config/routers.csv")
     args = parse.parse_args()
     reactor.listenTCP(args.p, RouterFactory(args.f))
     print "TEC-land router up on port: {0}".format(args.p)

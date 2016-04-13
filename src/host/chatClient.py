@@ -1,8 +1,20 @@
+# coding=utf-8
+"""
+Instituto Tecnológico de Costa Rica
+Ingeniería en Computación
+Redes de Computadoras
+Profesor: Kevin Moraga
+Estudiantes:
+    Daniel Solís Méndez
+    Melvin Elizondo Pérez
+I Semestre 2016
+"""
+
 from twisted.internet import reactor, protocol
 import json
 
 
-class EchoClient(protocol.Protocol):
+class ChatClient(protocol.Protocol):
     def connectionMade(self):
         self.registerUser()
 
@@ -16,19 +28,5 @@ class EchoClient(protocol.Protocol):
         data = {"type": 'r', "username": username}
         self.transport.write(json.dumps(data))
 
-
-class EchoFactory(protocol.ClientFactory):
-    def buildProtocol(self, addr):
-        return EchoClient()
-
-    def clientConnectionFailed(self, connector, reason):
-        print "Connection failed."
-        reactor.stop()
-
-    def clientConnectionLost(self, connector, reason):
-        print "Connection lost."
-        reactor.stop()
-
-
-reactor.connectTCP("localhost", 8000, EchoFactory())
-reactor.run()
+    def getRouterIp(self):
+        pass
