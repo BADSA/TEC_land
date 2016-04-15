@@ -13,7 +13,6 @@ I Semestre 2016
 import argparse
 import csv, json, socket
 from host import Host
-from model.message import Message
 from config import HostConfig
 
 
@@ -32,6 +31,7 @@ class ConnectionFinder:
         return list
 
     def look_for_router(self):
+        found = False
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         for router in self.routers:
             try:
@@ -40,14 +40,18 @@ class ConnectionFinder:
                 s.connect((ip, port))
                 print "Server %s is up and running!" % router["ip"]
                 s.sendto(json.dumps({"type": 'n'}), (ip, port))
+                found = True
                 break
             except socket.error as e:
                 print "Server %s is not running" % router["ip"]
+        if found:
+            data = s.recv(2048)
+            data = json.loads(data)
+            s.close()
+            return [data["ip"], data["port"]]
 
-        data = s.recv(2048)
         s.close()
-        data = json.loads(data)
-        return [data["ip"], data["port"]]
+        return [None, None]
 
 
 if __name__ == '__main__':
@@ -65,12 +69,9 @@ if __name__ == '__main__':
     else:
         print "Dynamic Binding"
         ip, port = conMan.look_for_router()
-        print "Voy pa {0}:{1}".format(ip, port)
-        host.connect(ip, port)
+        if ip is not None:
+            host.connect(ip, port)
+        else:
+            print "No routers available"
 
-    while 1:
-        to = raw_input("Write the name of the username: ")
-        text = raw_input("Write the message: ")
-        mfrom = "melalonso"
-        msg = Message(mfrom, to, text)
-        host.send_message(msg)
+

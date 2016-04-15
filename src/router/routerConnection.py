@@ -1,6 +1,6 @@
 from time import sleep
 from twisted.internet import protocol, reactor, defer
-from client import RouterClient
+#from client import RouterClient
 import json
 import csv
 
@@ -28,23 +28,27 @@ class RouterConnection(protocol.Protocol):
             print "Connection lost"
 
     def dataReceived(self, data):
-        # print data
+        print "En server tengo"
+        print data
         data = json.loads(data)
+        print "+++++++++++++++++++++afer loads"
         self.connection_type = data["type"]
         self.parse_data(data)
 
     def parse_data(self, data):
         if data["type"] == 'r':
-            self.register_ser(data)
-        if data["type"] == 'q':
+            self.register_user(data)
+        elif data["type"] == 'q':
             self.get_connections()
-        if data["type"] == 'n':
+        elif data["type"] == 'n':
             # ip, port = getRouterLessCharged()
             # data = {"ip": ip, "port": port}
             data = {"ip": "127.0.0.1", "port": 8000}
             self.transport.write(json.dumps(data))
             # self.ask_disp()
             # print self.get_best_router()
+        else:
+            self.transport.write("I don't know what to do with that.")
 
     def register_user(self, data):
         self.username = data["username"]
@@ -64,14 +68,15 @@ class RouterConnection(protocol.Protocol):
             fieldnames = ['name', 'ip', 'port']
             routers = csv.DictReader(routers_f, fieldnames=fieldnames)
             for router in routers:
-                rclient = RouterClient()
-                reactor.connectTCP(router["ip"], int(router["port"]), rclient)
-                response = rclient.get_response()
-                d = response.addCallback(self.parse_response)
-                print vars(d)
+                pass
+                #rclient = RouterClient()
+                #reactor.connectTCP(router["ip"], int(router["port"]), rclient)
+                #response = rclient.get_response()
+                #d = response.addCallback(self.parse_response)
+                #print vars(d)
 
-    def parse_response(self, response):
-        return response
+    #def parse_response(self, response):
+    #    return response
 
     def get_best_router(self):
         return self.routers

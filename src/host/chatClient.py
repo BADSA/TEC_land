@@ -10,7 +10,7 @@ Estudiantes:
 I Semestre 2016
 """
 
-from twisted.internet import reactor, protocol
+from twisted.internet import reactor, protocol, task
 import json
 
 
@@ -33,4 +33,7 @@ class ChatClient(protocol.Protocol):
         self.transport.write(json.dumps(data))
 
     def send_data(self, data):
-        self.transport.write(data)
+        print "Voy a mandar"
+        print data
+        print "==============="
+        self.transport.write(json.dumps(data))

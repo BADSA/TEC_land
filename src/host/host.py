@@ -10,8 +10,10 @@ Estudiantes:
 I Semestre 2016
 """
 
-from twisted.internet import reactor
+from twisted.internet import reactor, task
 from hostFactory import HostFactory
+from model.message import Message
+import socket
 
 
 class Host:
@@ -21,9 +23,7 @@ class Host:
 
     def connect(self, ip, port):
         print "TEC-land host connecting to {0}:{1}".format(ip, port)
-        reactor.connectTCP(ip, port, self.factory)
-        reactor.run()
-
-    def send_message(self, msg):
-        data = {"from": msg.mfrom, "to": msg.to, "hashtags": msg.hashtags, "msg": msg.text}
-        self.factory.p.send_data(data)
+        s = socket.socket()
+        s.connect((ip, port))
+        print s.recv(1024)
+        s.close()

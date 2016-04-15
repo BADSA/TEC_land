@@ -10,16 +10,25 @@ Estudiantes:
 I Semestre 2016
 """
 
-from twisted.internet import reactor, protocol
+from twisted.internet import reactor, protocol, task
 from chatClient import ChatClient
 
 
 class HostFactory(protocol.ClientFactory):
 
-    def buildProtocol(self, addr):
+    def __init__(self):
         self.p = ChatClient()
         self.p.factory = self
+
+    def buildProtocol(self, addr):
         return self.p
+
+    def ask_for_msg(self):
+        to = raw_input("Receiver: ")
+        text = raw_input("Write the message: ")
+        mfrom = "melalonso"
+        data = {"from": mfrom, "to": to, "msg": text}
+        self.p.send_data(data)
 
     def clientConnectionFailed(self, connector, reason):
         print "Connection failed."
