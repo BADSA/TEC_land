@@ -15,7 +15,6 @@ class HostManager:
             fieldnames = ['username', 'ip', 'port']
             hosts = csv.DictReader(hosts_file, fieldnames=fieldnames)
             for host in hosts:
-                #print host
                 self.hosts.append(host)
 
     def exists(self, username):
@@ -26,12 +25,11 @@ class HostManager:
 
         if self.check_loaded(username):
             return True
-
+        print "User is OK"
         return False
 
     def register(self, host):
         exists = self.exists(host["username"])
-        print "User already exists"
         fieldnames = ['username', 'ip', 'port']
         hosts_file = open(self.hosts_file, "a")
         writer = csv.DictWriter(hosts_file, fieldnames=fieldnames)

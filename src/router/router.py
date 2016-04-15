@@ -1,5 +1,4 @@
 import argparse, sys
-#sys.path.extend(['/home/sd/Documents/HACKPLACE/TEC_land/src'])
 
 from twisted.internet import protocol, reactor
 from model.hostManager import HostManager

@@ -31,7 +31,9 @@ class RouterConnection(protocol.Protocol):
         self.parse_data(data)
 
     def parse_data(self, data):
-        if data["type"] == 'r':
+        if data["type"] == "m":
+            self.send_to_user(data)
+        elif data["type"] == 'r':
             self.register_user(data)
         elif data["type"] == 'q':
             self.get_connections()
@@ -59,6 +61,12 @@ class RouterConnection(protocol.Protocol):
         else:
             self._write({"msg": "Username already taken"})
             self.username = ""
+
+    def send_to_user(self, data):
+        self._write({"msg": "Message successfully sent"})
+        sc = SocketClient("127.0.0.1", 8001, 1)
+        response = sc.send({"msg": data["msg"], "from": data["from"]})
+        print response
 
     def _consult_routers(self, data, func):
         file_name = self.factory.routers_file

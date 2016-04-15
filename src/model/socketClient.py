@@ -28,7 +28,8 @@ class SocketClient:
             return False
 
     def send(self, data):  # El send responde de una vez no necesita hacer recv
-        self.sock.send(json.dumps(data))
+        data = json.dumps(data)
+        self.sock.send(data)
         if self.type == 1:
             response = self.sock.recv(2048)
             self.sock.close()
