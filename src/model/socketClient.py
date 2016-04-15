@@ -2,7 +2,7 @@ from socket import socket, AF_INET, SOCK_STREAM, error
 import json
 
 
-class RouterClient:
+class SocketClient:
 
     def __init__(self, ip, port, type=0):
         self.sock = socket(AF_INET, SOCK_STREAM)

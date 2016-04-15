@@ -1,5 +1,5 @@
 from twisted.internet import protocol, reactor, defer
-from client import RouterClient
+from model.socketClient import SocketClient
 import json
 import csv
 
@@ -10,6 +10,8 @@ class RouterConnection(protocol.Protocol):
         self.factory = factory
         self.connection_type = ""
         self.username = ""
+        self.routers = []
+        self.response = None
 
     def connectionMade(self):
         print "New Connection..."
@@ -25,7 +27,6 @@ class RouterConnection(protocol.Protocol):
 
     def dataReceived(self, data):
         data = json.loads(data)
-        print "+++++++++++++++++++++afer loads"
         self.connection_type = data["type"]
         self.parse_data(data)
 
@@ -35,19 +36,22 @@ class RouterConnection(protocol.Protocol):
         elif data["type"] == 'q':
             self.get_connections()
         elif data["type"] == 'n':
-            # ip, port = getRouterLessCharged()
-            # data = {"ip": ip, "port": port}
-            data = {"ip": "127.0.0.1", "port": 8000}
-            self.transport.write(json.dumps(data))
-            # self.ask_disp()
-            # print self.get_best_router()
+            self.routers = []
+            self._consult_routers({"type": "q"}, self.ask_disp)
+            self._get_best_router()
+        elif data["type"] == 'qu': #query if user exists in local network
+            self.is_local_user(data["username"])
+        elif data["type"] == 'm':
+            self.send_message(data)
+        elif data["type": 'fw']:
+            self._send_to(data)
         else:
             self.transport.write("I don't know what to do with that.")
 
     def register_user(self, data):
         self.username = data["username"]
-        ip, port = self.transport.client
-        connection = {"ip": ip, "port": port, "username": data["username"]}
+        ip, _ = self.transport.client
+        connection = {"ip": ip, "port": data["port"], "username": data["username"]}
         if not self.factory.host_manager.exists(data["username"]):
             self.factory.host_manager.register(connection)
             self._write({"msg": "Username registered correctly"})
@@ -56,33 +60,66 @@ class RouterConnection(protocol.Protocol):
             self._write({"msg": "Username already taken"})
             self.username = ""
 
-    def ask_disp(self):
+    def _consult_routers(self, data, func):
         file_name = self.factory.routers_file
-        routers_list = []
         with open(file_name, 'r') as routers_f:
             fieldnames = ['name', 'ip', 'port']
             routers = csv.DictReader(routers_f, fieldnames=fieldnames)
             for router in routers:
-                rc = RouterClient(router["ip"], router["port"], 1)
-                response = rc.send({"type": "q"})
-                print router, "Cantidad de conexiones:", response
-                routers_list.append([router, int(response)])
+                sc = SocketClient(router["ip"], router["port"], 1)
+                if sc.status():
+                    response = sc.send(data)
 
-        if not routers_list:
-            self._write({"ip": self.ip, "port": self.port})
-        else:
-            self._get_best_router(routers_list)
+                    if func(router, response):
+                        break
+
+    def ask_disp(self, router, response):
+        self.routers.append([router, int(response)])
 
     def parse_response(self, response):
         self.factory.routers.append(response)
 
+    def user_on_router(self, router, response):
+        is_on_router = json.loads(response)
+        if is_on_router:
+            self.response = router
+            return True
+
     def get_connections(self):
         self.transport.write(str(self.factory.numConnections))
 
-    def _get_best_router(self, list):
-        better = list[0]
+    def is_local_user(self, username):
+        is_local = self.factory.host_manager.exists(username)
+        self._write({'is_local': is_local})
 
-        for router in list:
+    def send_message(self, data):
+        if self.factory.host_manager.exists(data["to"]):
+            self._send_to(data)
+            self._write({"msg": "Send successfully"})
+        else:
+            self._consult_routers({"type": 'qu', "username": data["to"]}, self.user_on_router)
+
+            data["type"] = 'fw'
+            sc = SocketClient(self.response["ip"], self.response["port"], 1)
+            response = sc.send(data)
+            print response
+            self._write({"msg": "Message forwarded"})
+
+    def _send_to(self, data):
+        user_info = self.factory.host_manager.get_user(data["to"])
+        sc = SocketClient(user_info["ip"], user_info["port"], 1)
+        response = sc.send(data)
+        self._write(response)
+
+    def _get_best_router(self):
+
+        if not self.routers:
+            self._write({"ip": self.ip, "port": self.port})
+            return
+
+        better = self.routers[0]
+
+        for router in self.routers:
             if router[1] < better[1]:
                 better = router
 

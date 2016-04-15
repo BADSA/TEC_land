@@ -21,6 +21,7 @@ class HostManager:
     def exists(self, username):
         if self.check_loaded(username):
             return True
+
         self._load_hosts()
 
         if self.check_loaded(username):
@@ -50,4 +51,9 @@ class HostManager:
         hosts_file = open(self.hosts_file, "w")
         writer = csv.DictWriter(hosts_file, fieldnames=fieldnames)
         writer.writerows(newlist)
+
+    def get_user(self, user):
+        user_info = [host for host in self.hosts if host["usernmae"] == user]
+        print user_info
+        return user_info
 
