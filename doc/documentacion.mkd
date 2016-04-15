@@ -1,0 +1,60 @@
+# Introducción
+
+El proyecto consiste en realizar una reimplementación de algunas de las funciones de varias capas del modelo OSI, generando un protocolo propio para el 
+envio de mensajes a través de la red y definiendo un RFC para el mismo.
+
+### Capa 1: Medio Físico
+En el proyecto el medio físico por utilizar es la luz. Para su transmisión de hará uso de una Raspberry Pi, un LED, un receptor de luz, un capacitor, entre otros.
+El objetivo es convertir los paquetes en presencia o ausencia de luz, e interpretar estas señales en el otro extremo pudiendo reconstruir el paquete y darle el sentido
+con el que se envio.
+
+### Capa 2 y 3: TEC-land
+Consiste en una red que funciona sobre TCP/IP mediante la cual se realiza el envio de mensajes de texto de un nodo a otro. 
+Los diferentes nodos centrales se encargan de realizar el ruteo de los paquetes a través de los distintos dispositivos que se encuentran asociados
+
+### Capa 4: Aplicación
+El propósito de TEC-land es ser una red de chat que permita la comunicación entre personas en distintas localizaciones. Esto se da a nivel
+interno de la red, permitiendo que las comunicaciones sean privadas. Existe también la opción de enviar mensajes que salgan a la "clearnet" y sean
+accesibles por todo el público, como también se pueden mandar "broadcast" a lo interno de la red.
+
+Además en esta capa se debe realizar la instalación de un servidor IRC, para que los mensajes catalogados como públicos pueden ser vistos por las personas.
+Asimismo se debe brindar la posibilidad de publicar entradas en un servidor de nntp.
+
+# Ambiente de desarrollo
+
+Indicar las herramientas usadas para implementar la tarea.
+
+Python es un lenguaje de programación interpretado cuya filosofía hace hincapié en una sintaxis que favorezca un código legible. Se trata de un lenguaje de programación multiparadigma, ya que soporta orientación a objetos, programación imperativa y, en menor medida, programación funcional. Es un lenguaje interpretado, usa tipado dinámico y es multiplataforma.
+
+Twisted es un framework de red para programación dirigida por eventos escrito en Python y licenciado bajo la licencia MIT. Twisted proporciona soporte para varias arquitecturas (TCP, UDP, SSL/TLS, IP Multicast, Unix domain sockets), un gran número de protocolos (incluidos HTTP, XMPP, NNTP, IMAP, SSH, IRC, FTP), y mucho más.
+
+PyCharm es un entorno de desarrollo integrado (IDE) que se utiliza para la programación en Python. Proporciona análisis de código, un depurador gráfico, un medidor de unidad integrada, integración con sistemas de control de versiones (prensas de tornillo), y apoya el desarrollo web con Django. PyCharm es desarrollado por la empresa checa JetBrains.
+
+
+
+# Estructuras de datos usadas y funciones
+
+Se debe describir las principales funciones y estructuras utilizadas en la elaboracion de esta asignacion
+
+# Instrucciones para ejecutar el programa
+
+Presentar las consultas concretas usadas para correr el programa para el problema planteado en el enunciado de la tarea y para los casos planteados al final de esta documentacion.
+
+# Actividades realizadas por el estudiante
+
+Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t ́erminos del tiempo invertido para una actividad espec ́ıfica que impacto directamente el desarrollo del trabajo, de manera breve (no mas de una l ́ınea) se describe lo que se realizo, la cantidad de horas invertidas y la fecha en la que se realizo. Se deben sumar las horas invertidas por cada estudiante, sean conscientes a la hora de realizar esto el profesor determinara si los reportes estan acordes al producto entregado.
+
+Jueves 14 de abril 
+- Trabajamos en el Host:
+    - Envio de mensaje hasta router para que este se encargue de hacerle "forward".
+    - Creacion de "thread" para que muestre el chat preguntando a quien va dirigido el mensaje
+    y su contenido.
+    - Clases ChatClient, HostFactory,
+
+
+# Comentarios finales
+Indicar el estado final en que qued ́o el programa, problemas encontrados y limitaciones adicionales.
+
+# Conclusiones
+
+# Bibliografía
