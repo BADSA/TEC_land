@@ -1,5 +1,5 @@
 from twisted.internet import protocol, reactor, defer
-from client import RouterClient
+from model.socketClient import SocketClient
 import json
 import csv
 
@@ -24,10 +24,7 @@ class RouterConnection(protocol.Protocol):
             print "Connection lost"
 
     def dataReceived(self, data):
-        print "Recibi ", data
-        print type(data)
         data = json.loads(data)
-        print data
         self.connection_type = data["type"]
         self.parse_data(data)
 
@@ -62,6 +59,9 @@ class RouterConnection(protocol.Protocol):
 
     def send_to_user(self, data):
         self._write({"msg": "Message successfully sent"})
+        sc = SocketClient("127.0.0.1", 8001, 1)
+        response = sc.send({"msg": data["msg"], "from": data["from"]})
+        print response
 
     def ask_disp(self):
         file_name = self.factory.routers_file

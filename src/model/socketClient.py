@@ -2,7 +2,7 @@ from socket import socket, AF_INET, SOCK_STREAM, error
 import json
 
 
-class RouterClient:
+class SocketClient:
 
     def __init__(self, ip, port, type=0):
         self.sock = socket(AF_INET, SOCK_STREAM)
@@ -28,7 +28,8 @@ class RouterClient:
             return False
 
     def send(self, data):  # El send responde de una vez no necesita hacer recv
-        self.sock.send(json.dumps(data))
+        data = json.dumps(data)
+        self.sock.send(data)
         if self.type == 1:
             response = self.sock.recv(2048)
             self.sock.close()
