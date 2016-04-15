@@ -21,7 +21,8 @@ class Router(protocol.Factory):
 if __name__ == '__main__':
     parse = argparse.ArgumentParser()
     parse.add_argument("-p", type=int,  help="router port number")
-    parse.add_argument("-f", type=str,  help="routers ip and ports file", default="routers")
+    parse.add_argument("-f", type=argparse.FileType('r'),  help="routers ip and ports file", default="../config/routers.csv")
+
     args = parse.parse_args()
     reactor.listenTCP(args.p, Router(args.f))
     print "TEC-land router up on port: {0}".format(args.p)

@@ -1,5 +1,5 @@
 from twisted.internet import protocol, reactor, defer
-from model.routerClient import RouterClient
+from client import RouterClient
 import json
 import csv
 
@@ -25,16 +25,24 @@ class RouterConnection(protocol.Protocol):
 
     def dataReceived(self, data):
         data = json.loads(data)
+        print "+++++++++++++++++++++afer loads"
         self.connection_type = data["type"]
         self.parse_data(data)
 
     def parse_data(self, data):
         if data["type"] == 'r':
             self.register_user(data)
-        if data["type"] == 'q':
+        elif data["type"] == 'q':
             self.get_connections()
-        if data["type"] == 'n':
-            self.ask_disp()
+        elif data["type"] == 'n':
+            # ip, port = getRouterLessCharged()
+            # data = {"ip": ip, "port": port}
+            data = {"ip": "127.0.0.1", "port": 8000}
+            self.transport.write(json.dumps(data))
+            # self.ask_disp()
+            # print self.get_best_router()
+        else:
+            self.transport.write("I don't know what to do with that.")
 
     def register_user(self, data):
         self.username = data["username"]
