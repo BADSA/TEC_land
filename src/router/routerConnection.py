@@ -83,6 +83,9 @@ class RouterConnection(protocol.Protocol):
     def parse_response(self, response):
         self.factory.routers.append(response)
 
+    def get_connections(self):
+        self.transport.write(str(self.factory.numConnections))
+
     def _get_best_router(self, list):
         better = list[0]
 
@@ -94,9 +97,6 @@ class RouterConnection(protocol.Protocol):
             self._write({"ip": self.ip, "port": self.port})
         else:
             self._write(better[0])
-
-    def get_connections(self):
-        self.transport.write(str(self.factory.numConnections))
 
     def _build_router_info(self):
         host = str(self.transport.getHost()).replace(')', '').split(', ')
