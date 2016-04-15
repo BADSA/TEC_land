@@ -1,5 +1,5 @@
 from twisted.internet import protocol, reactor, defer
-from model.routerClient import RouterClient
+from client import RouterClient
 import json
 import csv
 

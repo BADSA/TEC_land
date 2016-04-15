@@ -10,20 +10,38 @@ Estudiantes:
 I Semestre 2016
 """
 
-from twisted.internet import reactor, task
-from hostFactory import HostFactory
-from model.message import Message
 import socket
+import json
 
 
 class Host:
 
     def __init__(self):
-        self.factory = HostFactory()
+        self.router_ip = ""
+        self.router_port = ""
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print "TEC-land network online..."
+        self.register_user()
 
     def connect(self, ip, port):
         print "TEC-land host connecting to {0}:{1}".format(ip, port)
-        s = socket.socket()
-        s.connect((ip, port))
-        print s.recv(1024)
-        s.close()
+        self.sock.connect((ip, port))
+        self.router_ip = ip
+        self.router_port = port
+
+    def send(self, msg):
+        try:
+            self.sock.send(msg)
+        except:
+            print 'Could not send to {}:{}\n'.format(self.router_ip, self.router_port)
+            return None
+        response = self.sock.recv(2048)
+        return response
+
+    def register_user(self):
+        username = raw_input("Please write an username to use: ")
+        data = {"type": 'r', "username": username}
+        response = self.send(json.dumps(data))
+        if response == "NO":
+            print "Username already taken, choose another one."
+            self.register_user()

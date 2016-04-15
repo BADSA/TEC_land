@@ -60,8 +60,8 @@ if __name__ == '__main__':
     parse.add_argument("-i", "--ip", type=str, help="Router's IP to connect.")
     parse.add_argument("-p", "--port", type=int, help="Router's port number to connect.")
     args = parse.parse_args()
-    conMan = ConnectionFinder()
 
+    conMan = ConnectionFinder()
     host = Host()
     # Connect to given router
     if args.ip and args.port:
@@ -73,5 +73,12 @@ if __name__ == '__main__':
             host.connect(ip, port)
         else:
             print "No routers available"
+
+    while True:
+        to = raw_input("Receiver: ")
+        text = raw_input("Write the message: ")
+        mfrom = "melalonso"
+        data = {"from": mfrom, "to": to, "msg": text}
+        host.send(data)
 
 
