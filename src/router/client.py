@@ -1,26 +1,24 @@
-from twisted.internet import reactor, protocol
+from time import sleep
+from twisted.internet import reactor, protocol, defer
+import json
+class RouterClientConnection(protocol.Protocol):
 
-class EchoClient(protocol.Protocol):
     def connectionMade(self):
-        self.transport.write("Hello, world!")
+        data = {"type": 'q'}
+        self.transport.write(json.dumps(data))
 
     def dataReceived(self, data):
-        print "Server said:", data
-        #self.transport.loseConnection()
+        response = {"conn": data,  "client": str(self.transport.getPeer())}
+        self.factory.response.append(response)
+        self.transport.loseConnection()
 
-class EchoFactory(protocol.ClientFactory):
+
+class RouterClient(protocol.ClientFactory):
+
     def buildProtocol(self, addr):
-        return EchoClient()
+        p = RouterClientConnection()
+        p.factory = self
+        return p
 
-    def clientConnectionFailed(self, connector, reason):
-        print "Connection failed."
-        reactor.stop()
-
-    def clientConnectionLost(self, connector, reason):
-        print "Connection lost."
-        reactor.stop()
-
-
-if __name__ == "__main__":
-    reactor.connectTCP("localhost", 8000, EchoFactory())
-    reactor.run()
+    def get_response(self):
+        return self.response

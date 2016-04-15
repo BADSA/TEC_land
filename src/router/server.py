@@ -1,4 +1,6 @@
-import argparse
+import argparse, sys
+sys.path.extend(['/home/sd/Documents/HACKPLACE/TEC_land/src'])
+
 from twisted.internet import protocol, reactor
 from model.hostManager import HostManager
 from routerConnection import RouterConnection
@@ -10,6 +12,7 @@ class Router(protocol.Factory):
         self.host_manager = HostManager()
         self.routers_file = r_file
         self.numConnections = 0
+        self.routers = []
 
     def buildProtocol(self, addr):
         return RouterConnection(self)
