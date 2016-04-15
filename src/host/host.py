@@ -25,7 +25,7 @@ class Host:
 
     def connect(self, ip, port):
         print "TEC-land host connecting to {0}:{1}".format(ip, port)
-        self.sock.connect((ip, port))
+        self.sock.connect((ip, int(port)))
         return self._register_user()
 
     def send(self, msg):

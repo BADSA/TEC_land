@@ -62,12 +62,6 @@ class RouterConnection(protocol.Protocol):
             self._write({"msg": "Username already taken"})
             self.username = ""
 
-    def send_to_user(self, data):
-        self._write({"msg": "Message successfully sent"})
-        sc = SocketClient("127.0.0.1", 8001, 1)
-        response = sc.send({"msg": data["msg"], "from": data["from"]})
-        print response
-
     def _consult_routers(self, data, func):
         file_name = self.factory.routers_file
         with open(file_name, 'r') as routers_f:
@@ -115,6 +109,7 @@ class RouterConnection(protocol.Protocol):
 
     def _send_to(self, data):
         user_info = self.factory.host_manager.get_user(data["to"])
+        print user_info, "User info"
         sc = SocketClient(user_info["ip"], user_info["port"], 1)
         response = sc.send(data)
         self._write(response)
