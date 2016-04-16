@@ -51,7 +51,7 @@ class HostManager:
         writer.writerows(newlist)
 
     def get_user(self, user):
-        user_info = [host for host in self.hosts if host["usernmae"] == user]
+        user_info = [host for host in self.hosts if host["username"] == user]
         print user_info
-        return user_info
+        return user_info[0]
 

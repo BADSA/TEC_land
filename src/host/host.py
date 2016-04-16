@@ -36,6 +36,7 @@ class Host:
             print 'Could not send to {}:{}\n'.format(self.router_ip, self.router_port)
             return None
         response = self.sock.recv(2048)
+        print response
         response = json.loads(response)
         print response["msg"]
         return response
@@ -44,7 +45,7 @@ class Host:
         username = raw_input("Please write an username to use: ")
         data = {"type": 'r', "username": username, "port": self.listenPort}
         response = self.send(data)
-        if response["msg"] == "NO":
+        if response["status"] == -1:
             print "Username already taken, choose another one."
             self._register_user()
         return username
