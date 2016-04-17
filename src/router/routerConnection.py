@@ -1,10 +1,22 @@
-from twisted.internet import protocol, reactor, defer
+from twisted.internet.protocol import Protocol
 from model.socketClient import SocketClient
 import json
 import csv
 
 
-class RouterConnection(protocol.Protocol):
+class RouterConnection(Protocol):
+    """ This class handles every new connection to the router.
+
+    On every connection the Factory will create an object of
+    this class to handle the connection.
+
+    This class is the responsible for send the messages over
+    the local network, also connects to the other routers to
+    now if some user exists on the net, forward messages to
+    other routers or make broadcast over the entire NETWORK.
+
+    """
+
     # Routers file required
     def __init__(self, factory):
         self.factory = factory
@@ -31,7 +43,21 @@ class RouterConnection(protocol.Protocol):
         self.parse_data(data)
 
     def parse_data(self, data):
-        if data["type"] == "m":
+        """ Chose which action take given a connection type.
+
+        The description of each connection type will be given
+        on the corresponding function called.
+
+        :param data: This object should be a dictionary with
+        all the message data, if there is not connection type
+        provided any action will be taken.
+        """
+        if data["type"] == "b":
+            self._broadcast_local(data)
+            self._broadcast_network(data)
+        elif data["type"] == "bl":
+            self._broadcast_local(data)
+        elif data["type"] == "m":
             self.send_message(data)
         elif data["type"] == 'r':
             self.register_user(data)
@@ -39,9 +65,9 @@ class RouterConnection(protocol.Protocol):
             self.get_connections()
         elif data["type"] == 'n':
             self.routers = []
-            self._consult_routers({"type": "q"}, self.ask_disp)
+            self._send_to_routers({"type": "q"}, self.ask_disp)
             self._get_best_router()
-        elif data["type"] == 'qu': #query if user exists in local network
+        elif data["type"] == 'qu':  # query if user exists in local network
             self.is_local_user(data["username"])
         elif data["type"] == 'm':
             self.send_message(data)
@@ -51,10 +77,21 @@ class RouterConnection(protocol.Protocol):
             self.transport.write("I don't know what to do with that.")
 
     def register_user(self, data):
+        """ Register an user, username should be given.
+
+        The method verifies if the username given it's already
+        taken, if taken return a message with -1 status to
+        try with another username, it also check if the same
+        username already exists over the entire network to
+        avoid duplicates. In the same way -1 will be sent if
+        username already exits on the network.
+
+        :param data: A dictionary with the username to register.
+        """
         ip, _ = self.transport.client
 
         if not self.factory.host_manager.exists(data["username"]):
-            self._consult_routers({"type": 'qu', "username": data["username"]}, self.user_on_router)
+            self._send_to_routers({"type": 'qu', "username": data["username"]}, self.user_on_router)
             if not self.response:
                 self.username = data["username"]
                 connection = {"ip": ip, "port": data["port"], "username": data["username"]}
@@ -66,7 +103,23 @@ class RouterConnection(protocol.Protocol):
         self._write({"msg": "Username already taken"}, -1)
         self.username = ""
 
-    def _consult_routers(self, data, func):
+    def _send_to_routers(self, data, func=None):
+        """ Send data to all the routers on the network.
+
+        This is a generic method to communicate with the other
+        router in the network, it send a data object with a
+        specific connection type and applies a function(if given)
+        to the response given by the connected router.
+
+        :param data: Should be a dictionary object which contains
+        the connection type to decide an action and extra data if
+        it's needed to complete the action.
+
+        :param func: Should be a function with two parameters, the
+        responding router and the response. Each function should
+        determinate what to do with the response.
+
+        """
         self.response = None
         file_name = self.factory.routers_file
         with open(file_name, 'r') as routers_f:
@@ -76,10 +129,16 @@ class RouterConnection(protocol.Protocol):
                 sc = SocketClient(router["ip"], router["port"], 1)
                 if sc.status():
                     response = sc.send(data)
-                    if func(router, response):
+                    if func and func(router, response):
                         break
 
     def ask_disp(self, router, response):
+        """
+
+        :param router:
+        :param response:
+        :return:
+        """
         self.routers.append([router, int(response)])
 
     def parse_response(self, response):
@@ -101,10 +160,9 @@ class RouterConnection(protocol.Protocol):
     def send_message(self, data):
         if self.factory.host_manager.exists(data["to"]):
             self._send_to(data)
-            #self._write({"msg": "Send successfully"})
         else:
             print "Consulting routers to user"
-            self._consult_routers({"type": 'qu', "username": data["to"]}, self.user_on_router)
+            self._send_to_routers({"type": 'qu', "username": data["to"]}, self.user_on_router)
             if self.response:
                 data["type"] = 'fw'
                 sc = SocketClient(self.response["ip"], self.response["port"], 1)
@@ -114,8 +172,11 @@ class RouterConnection(protocol.Protocol):
             else:
                 self._write({"msg": "Receiver is not reachable"}, -1)
 
-    def _send_to(self, data):
-        user_info = self.factory.host_manager.get_user(data["to"])
+    def _send_to(self, data, user_info=None):
+
+        if not user_info:
+            user_info = self.factory.host_manager.get_user(data["to"])
+
         sc = SocketClient(user_info["ip"], user_info["port"], 1)
         response = sc.send(data)
         print response, "FUNTION _SENT_TO"
@@ -147,3 +208,12 @@ class RouterConnection(protocol.Protocol):
     def _write(self, data, status=1):
         data["status"] = status
         self.transport.write(json.dumps(data))
+
+    def _broadcast_local(self, data):
+        local_users = self.factory.host_manager.get_users()
+        for user in local_users:
+            self._send_to(data, user)
+
+    def _broadcast_network(self, data):
+        data["type"] = "bl"
+        self._send_to_routers(data)

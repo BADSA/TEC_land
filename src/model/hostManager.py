@@ -55,3 +55,7 @@ class HostManager:
         print user_info
         return user_info[0]
 
+    def get_users(self):
+        self._load_hosts()
+        return self.hosts
+

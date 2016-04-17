@@ -22,6 +22,4 @@ class Message:
 
     def _extract_hash_tags(self):
         words = self.text.split(' ')
-        for word in words:
-            if word[0] == '#':
-                self.hashtags.append(word[1:])
+        self.hashtags = [word for word in words if word[0] == '#']
