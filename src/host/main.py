@@ -17,6 +17,8 @@ from connectionFinder import ConnectionFinder
 from config import HostConfig
 import argparse, threading
 
+from model.message import Message
+
 
 def chat(myuser):
     print "======================="
@@ -24,10 +26,14 @@ def chat(myuser):
     print "======================="
 
     while True:
-        to = raw_input("Receiver: ")
         text = raw_input("Write the message: ")
-        data = {"type": 'm', "from": myuser, "to": to, "msg": text}
-        host.send(data)
+        if "#" not in text:
+            to = raw_input("Receiver: ")
+            data = Message(myuser, to, text).to_dict()
+            host.send(data)
+        else:
+            data = Message(myuser, None, text, 'b').to_dict()
+            host.send(data)
 
 # Point of start for a TEC-Land Host
 if __name__ == '__main__':
@@ -39,17 +45,18 @@ if __name__ == '__main__':
 
     args = parse.parse_args()
     conMan = ConnectionFinder()
-    host = Host(HostConfig.LISTENPORT)
 
     # Connect to given router
     myuser = ""
     if args.ip and args.port:
-        myuser = host.connect(args.ip, args.port)
+        host = Host(args.ip, args.port)
+        myuser = host.register_user()
     else:
         print "Dynamic Binding"
         ip, port = conMan.look_for_router()
+        host = Host(ip, port)
         if ip is not None:
-            myuser = host.connect(ip, port)
+            myuser = host.register_user(HostConfig.LISTENPORT)
         else:
             print "No routers available"
 
