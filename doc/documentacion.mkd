@@ -1,15 +1,15 @@
 # Introducción
 
 El proyecto consiste en realizar una reimplementación de algunas de las funciones de varias capas del modelo OSI, generando un protocolo propio para el 
-envio de mensajes a través de la red y definiendo un RFC para el mismo.
+envío de mensajes a través de la red y definiendo un RFC para el mismo.
 
 ### Capa 1: Medio Físico
 En el proyecto el medio físico por utilizar es la luz. Para su transmisión de hará uso de una Raspberry Pi, un LED, un receptor de luz, un capacitor, entre otros.
 El objetivo es convertir los paquetes en presencia o ausencia de luz, e interpretar estas señales en el otro extremo pudiendo reconstruir el paquete y darle el sentido
-con el que se envio.
+con el que se envío.
 
 ### Capa 2 y 3: TEC-land
-Consiste en una red que funciona sobre TCP/IP mediante la cual se realiza el envio de mensajes de texto de un nodo a otro. 
+Consiste en una red que funciona sobre TCP/IP mediante la cual se realiza el envío de mensajes de texto de un nodo a otro. 
 Los diferentes nodos centrales se encargan de realizar el ruteo de los paquetes a través de los distintos dispositivos que se encuentran asociados
 
 ### Capa 4: Aplicación
@@ -24,37 +24,110 @@ Asimismo se debe brindar la posibilidad de publicar entradas en un servidor de n
 
 Indicar las herramientas usadas para implementar la tarea.
 
-Python es un lenguaje de programación interpretado cuya filosofía hace hincapié en una sintaxis que favorezca un código legible. Se trata de un lenguaje de programación multiparadigma, ya que soporta orientación a objetos, programación imperativa y, en menor medida, programación funcional. Es un lenguaje interpretado, usa tipado dinámico y es multiplataforma.
+Python: es un lenguaje de programación interpretado cuya filosofía hace hincapié en una sintaxis que favorezca un código legible. Se trata de un lenguaje de programación multiparadigma, ya que soporta orientación a objetos, programación imperativa y, en menor medida, programación funcional. Es un lenguaje interpretado, usa tipado dinámico y es multiplataforma.
 
-Twisted es un framework de red para programación dirigida por eventos escrito en Python y licenciado bajo la licencia MIT. Twisted proporciona soporte para varias arquitecturas (TCP, UDP, SSL/TLS, IP Multicast, Unix domain sockets), un gran número de protocolos (incluidos HTTP, XMPP, NNTP, IMAP, SSH, IRC, FTP), y mucho más.
+Twisted: es un framework de red para programación dirigida por eventos escrito en Python y licenciado bajo la licencia MIT. Twisted proporciona soporte para varias arquitecturas (TCP, UDP, SSL/TLS, IP Multicast, Unix domain sockets), un gran número de protocolos (incluidos HTTP, XMPP, NNTP, IMAP, SSH, IRC, FTP), y mucho más.
 
-PyCharm es un entorno de desarrollo integrado (IDE) que se utiliza para la programación en Python. Proporciona análisis de código, un depurador gráfico, un medidor de unidad integrada, integración con sistemas de control de versiones (prensas de tornillo), y apoya el desarrollo web con Django. PyCharm es desarrollado por la empresa checa JetBrains.
+PyCharm: es un entorno de desarrollo integrado (IDE) que se utiliza para la programación en Python. Proporciona análisis de código, un depurador gráfico, un medidor de unidad integrada, integración con sistemas de control de versiones (prensas de tornillo), y apoya el desarrollo web con Django. PyCharm es desarrollado por la empresa checa JetBrains.
 
 
 
 # Estructuras de datos usadas y funciones
 
-Se debe describir las principales funciones y estructuras utilizadas en la elaboracion de esta asignacion
+### Principales estructuras utilizadas
+
+**Listas**: utilizadas para almacenar los routers bien conocidos utilizados por un host para establecer conexión o por otro router cuando se necesita transmitir algún paquete a un nodo que no se encuentra entre sus conexiones directas.
+
+**Diccionarios**: utilizados principalmente para la transmisión de mensajes. Se envían objetos Diccionario que consisten de diferentes llaves y valores, estos permiten a los host y router categorizar los mensajes y distinguir entre la función que cada uno de estos tiene. Por ejemplo se tiene los tipos "m", "r", "q", "fw", que permiten respectivamente enviar un mensaje a otro usuario, registrar a un usuario dentro de la red, hacer una consulta a los demás routers para el balance de conexiones y hacer "forward" de un mensaje a un usuario conectado directamente a un router.
+
+### Principales funciones
+
+
+```ConnectionFinder::look_for_router()```: este método se encarga de buscar cuál es el router apropiado para cuando un host desea conectarse. El host indica que quiere unirse a la red, por lo que por medio de este método se usa la lista de routers bien conocidos para ver cuál se encuentra disponible. Una vez que se encuentra alguno, se le realiza la consulta de a cuál router debe conectarse.
+
+```ChatClient::dataReceived(data)```: método del cliente de chat que implementa lo que se va a realizar cuando el reactor de Twisted recibe un evento de información recibida. En este caso lo que se necesita hacer es notificar al usuario que un mensaje ha llegado.
+
+```HostManager::exists(username)```: verifica la existencia de un usuario en un router, mediante la revisión del archivo de hosts.csv (cada router posee su propio archivo).
+
+```HostManager::register(host)```: recibe la información del host que desea conectarse y la almacena en el archivo hosts.csv.
+
+```HostManager::delete(username)```: elimina a un usuario de la lista de hosts.csv cuando este se desconecta de la red.
+
+```HostManager::get_users()```: devuelve una lista con los usuarios pertenecientes a un router.
+
+```RouterConnection::connectionMade()```: método que maneja el evento de una nueva conexión de un host. Su responsabilidad es realizar el registro del usuario/host.
+
+```RouterConnection::dataReceived(data)```: este es una de las funciones más importantes de RouterConnection ya que aquí es donde se reciben los datos desde los clientes y se decide que hacer con ellos.
+
+```RouterConnection::parse_data(data)```: método que asigna una función como respuesta a cada uno de los tipos de solicitud.
+
+```RouterConnection::```
+
+
 
 # Instrucciones para ejecutar el programa
 
-Presentar las consultas concretas usadas para correr el programa para el problema planteado en el enunciado de la tarea y para los casos planteados al final de esta documentacion.
+Para correr TEC-land se tienen 2 archivos principales:
+
+host/main.py: se encarga de correr la aplicación host en un nodo. Este tiene como funciones principales la recepción y el envío de mensajes a través de la red.
+
+router/router.py: archivo principal de los nodos centrales, también llamados routers, que permite a estos ponerse disponibles y empezar a funcionar como punto de enlace para los siguientes host que se integren a la red. Este es el que se encarga de realizar todas las operaciones de ruteo en la red.
+
+Ambas aplicaciones deben ser un cliente y un servidor al mismo tiempo y para ejecutarlas simplemente se ejecuta el comando:
+
+``` $ python2 main.py``` o ```$ python2 router.py```
+
+Y se digita la información requerida para su inicio.
+
+
 
 # Actividades realizadas por el estudiante
 
-Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t ́erminos del tiempo invertido para una actividad espec ́ıfica que impacto directamente el desarrollo del trabajo, de manera breve (no mas de una l ́ınea) se describe lo que se realizo, la cantidad de horas invertidas y la fecha en la que se realizo. Se deben sumar las horas invertidas por cada estudiante, sean conscientes a la hora de realizar esto el profesor determinara si los reportes estan acordes al producto entregado.
+#### Jueves 31 marzo a viernes 01 abril
+Lectura de la especificación.
+Reunión con el profesor para aclarar puntos de la tarea.
+Investigación de P2P, APIs para redes mesh en Python, servidores IRC (Unreal IRC) y clientes (XChat IRC), Firechat.
+Logramos encender el LED de la Raspberry y convertir caracteres a su binario para transmitirlos por medio de luz.
+Instalación de Unrealircd.
+Instalación de Xchat.
 
-Jueves 14 de abril 
-- Trabajamos en el Host:
-    - Envio de mensaje hasta router para que este se encargue de hacerle "forward".
-    - Creacion de "thread" para que muestre el chat preguntando a quien va dirigido el mensaje
-    y su contenido.
-    - Clases ChatClient, HostFactory,
+#### Martes 05 de abril
+Investigacion de Scapy.
+Llenando el archivo csv con los routers bien conocidos.
+Decisiones para usuarios y subredes en el protocolo.
 
+#### Domingo 10 de abril
+Probando servidor y cliente TCP de twisted
+
+#### Lunes 11 de abril
+Programando un server-client TCP, ya funciona.
+Diseñando la red y como conectar nodos (usuario y registrador).
+Implementando configManager para manejar yaml.
+Implementando el cliente con sockets.
+Ya funciona el paso de mensajes; se pueden registrar, agregar vecinos, chequear si existe usuario y anular registro.
+Comentando secciones de código.
+
+#### Miércoles 13 de abril
+Trabajo en RFC basado en el de HTTP/1.1
+
+#### Jueves 14 de abril
+Terminando RFC.
+
+#### Jueves 14 de abril 
+Envío de mensaje hasta router para que este se encargue de hacerle "forward". 
+Creación de "thread" para que muestre el chat preguntando a quien va dirigido el mensaje y su contenido.
+Estructura básica para clases ChatClient y HostFactory,
 
 # Comentarios finales
 Indicar el estado final en que qued ́o el programa, problemas encontrados y limitaciones adicionales.
 
+
 # Conclusiones
 
+Trás la implentación de la red TEC-land se logró comprender mejor como funciona una red, cuáles son las tareas que le corresponden a cada de las capas (física, red, aplicación...).
+
+Se tuvo una experiencia de toma de decisiones para la creación del protocolo y el diseño que se utilizarían en la red. 
+
+
 # Bibliografía
+
