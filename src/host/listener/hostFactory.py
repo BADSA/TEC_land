@@ -14,9 +14,11 @@ from twisted.internet import protocol
 from chatClient import ChatClient
 
 
-# Factory that allows to handle the
-# incoming messages
 class HostFactory(protocol.Factory):
+    """
+    Factory that allows to handle the
+    host incoming messages.
+    """
 
     def __init__(self):
         pass

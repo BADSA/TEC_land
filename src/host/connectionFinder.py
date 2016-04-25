@@ -10,23 +10,28 @@ Estudiantes:
 I Semestre 2016
 """
 
-import csv, json, socket
+import csv
+import json
 from config import HostConfig
-
-
-# Class that looks for an available
-# router and asks for the router
-# with less connections.
 from model.socketClient import SocketClient
 
 
 class ConnectionFinder:
+    """
+    Class that looks for an available
+    router and asks for the router
+    with less connections.
+    """
+
     def __init__(self, wks=HostConfig.WKS):
         self.wks_file = wks
         self.routers = self.read_wks()
 
-    # Reads the Well Known Servers/Routers
     def read_wks(self):
+        """
+        Reads the Well Known Servers/Routers
+        :return: list with WKS
+        """
         list = []
         with open(self.wks_file) as wks_file:
             fieldnames = ['name', 'ip', 'port']
@@ -35,8 +40,11 @@ class ConnectionFinder:
                 list.append(router)
         return list
 
-    # Ask what router should the host connect
     def look_for_router(self):
+        """
+        Looks for the router the host should connect
+        :return: [ip, port] if found, [none, none] if not
+        """
         found = False
         s = None
         for router in self.routers:
