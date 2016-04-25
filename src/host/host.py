@@ -10,42 +10,36 @@ Estudiantes:
 I Semestre 2016
 """
 
-import socket
 import json
+from model.socketClient import SocketClient
 
 
 # Class that controls the task for a router
 # Connects to a Router and send a message to a user
 class Host:
 
-    def __init__(self, port):
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.listenPort = port
+    def __init__(self, ip, port):
+        self.sock_client = SocketClient(ip, port)
         print "TEC-land network online..."
-
-    def connect(self, ip, port):
         print "TEC-land host connecting to {0}:{1}".format(ip, port)
-        self.sock.connect((ip, int(port)))
-        return self._register_user()
 
     def send(self, msg):
-        msg = json.dumps(msg)
+        response = ""
         try:
-            self.sock.send(msg)
+            response = self.sock_client.send(msg)
         except:
             print 'Could not send to {}:{}\n'.format(self.router_ip, self.router_port)
             return None
-        response = self.sock.recv(2048)
-        print response
+
+        print response, "Response"
         response = json.loads(response)
-        print response["msg"]
         return response
 
-    def _register_user(self):
+    def register_user(self, listen_port):
         username = raw_input("Please write an username to use: ")
-        data = {"type": 'r', "username": username, "port": self.listenPort}
+        data = {"type": 'r', "username": username, "port": listen_port}
         response = self.send(data)
         if response["status"] == -1:
             print "Username already taken, choose another one."
-            self._register_user()
+            self.register_user()
         return username

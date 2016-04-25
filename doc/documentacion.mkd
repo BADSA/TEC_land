@@ -1,15 +1,15 @@
 # Introducción
 
 El proyecto consiste en realizar una reimplementación de algunas de las funciones de varias capas del modelo OSI, generando un protocolo propio para el 
-envio de mensajes a través de la red y definiendo un RFC para el mismo.
+envío de mensajes a través de la red y definiendo un RFC para el mismo.
 
 ### Capa 1: Medio Físico
 En el proyecto el medio físico por utilizar es la luz. Para su transmisión de hará uso de una Raspberry Pi, un LED, un receptor de luz, un capacitor, entre otros.
 El objetivo es convertir los paquetes en presencia o ausencia de luz, e interpretar estas señales en el otro extremo pudiendo reconstruir el paquete y darle el sentido
-con el que se envio.
+con el que se envío.
 
 ### Capa 2 y 3: TEC-land
-Consiste en una red que funciona sobre TCP/IP mediante la cual se realiza el envio de mensajes de texto de un nodo a otro. 
+Consiste en una red que funciona sobre TCP/IP mediante la cual se realiza el envío de mensajes de texto de un nodo a otro. 
 Los diferentes nodos centrales se encargan de realizar el ruteo de los paquetes a través de los distintos dispositivos que se encuentran asociados
 
 ### Capa 4: Aplicación
@@ -36,31 +36,30 @@ PyCharm: es un entorno de desarrollo integrado (IDE) que se utiliza para la prog
 
 ### Principales estructuras utilizadas
 
-**Listas**: utilizadas para almacenar los routers bien conocidos utilizados por un host para establecer conexion o por otro router cuando se necesita transmitir algun paquete a un nodo que no se encuentra entre sus conexiones directas.
+**Listas**: utilizadas para almacenar los routers bien conocidos utilizados por un host para establecer conexión o por otro router cuando se necesita transmitir algún paquete a un nodo que no se encuentra entre sus conexiones directas.
 
-**Diccionarios**: utilizados principalmente para la transmisión de mensajes. Se envian objetos Diccionario que consisten de diferentes llaves y valores, estos permiten a los host y router categorizar los mensajes y distinguir entre la función que cada uno de estos tiene. Por ejemplo se tiene los tipos "m", "r", "q", "fw", que permiten respectivamente enviar un mensaje a otro usuario, registrar a un usuario dentro de la red, hacer una consulta a los demás routers para el balance de conexiones y hacer "forward" de un mensaje a un usuario conectado directamente a un router.
+**Diccionarios**: utilizados principalmente para la transmisión de mensajes. Se envían objetos Diccionario que consisten de diferentes llaves y valores, estos permiten a los host y router categorizar los mensajes y distinguir entre la función que cada uno de estos tiene. Por ejemplo se tiene los tipos "m", "r", "q", "fw", que permiten respectivamente enviar un mensaje a otro usuario, registrar a un usuario dentro de la red, hacer una consulta a los demás routers para el balance de conexiones y hacer "forward" de un mensaje a un usuario conectado directamente a un router.
 
 ### Principales funciones
 
-```ConnectionFinder::look_for_router()```
 
-```Host::send(msg)```
+```ConnectionFinder::look_for_router()```: este método se encarga de buscar cuál es el router apropiado para cuando un host desea conectarse. El host indica que quiere unirse a la red, por lo que por medio de este método se usa la lista de routers bien conocidos para ver cuál se encuentra disponible. Una vez que se encuentra alguno, se le realiza la consulta de a cuál router debe conectarse.
 
-```ChatClient::dataReceived(data)```
+```ChatClient::dataReceived(data)```: método del cliente de chat que implementa lo que se va a realizar cuando el reactor de Twisted recibe un evento de información recibida. En este caso lo que se necesita hacer es notificar al usuario que un mensaje ha llegado.
 
-```HostManager::exists(username)```
+```HostManager::exists(username)```: verifica la existencia de un usuario en un router, mediante la revisión del archivo de hosts.csv (cada router posee su propio archivo).
 
-```HostManager::register(host)```
+```HostManager::register(host)```: recibe la información del host que desea conectarse y la almacena en el archivo hosts.csv.
 
-```HostManager::delete(username)```
+```HostManager::delete(username)```: elimina a un usuario de la lista de hosts.csv cuando este se desconecta de la red.
 
-```HostManager::get_users()```
+```HostManager::get_users()```: devuelve una lista con los usuarios pertenecientes a un router.
 
-```RouterConnection::connectionMade()```
+```RouterConnection::connectionMade()```: método que maneja el evento de una nueva conexión de un host. Su responsabilidad es realizar el registro del usuario/host.
 
-```RouterConnection::dataReceived(data)```
+```RouterConnection::dataReceived(data)```: este es una de las funciones más importantes de RouterConnection ya que aquí es donde se reciben los datos desde los clientes y se decide que hacer con ellos.
 
-```RouterConnection::parse_data(data)```
+```RouterConnection::parse_data(data)```: método que asigna una función como respuesta a cada uno de los tipos de solicitud.
 
 ```RouterConnection::```
 
@@ -68,11 +67,9 @@ PyCharm: es un entorno de desarrollo integrado (IDE) que se utiliza para la prog
 
 # Instrucciones para ejecutar el programa
 
-Presentar las consultas concretas usadas para correr el programa para el problema planteado en el enunciado de la tarea y para los casos planteados al final de esta documentacion.
-
 Para correr TEC-land se tienen 2 archivos principales:
 
-host/main.py: se encarga de correr la aplicación host en un nodo. Este tiene como funciones principales la recepción y el envío de mensajes a travéz de la red.
+host/main.py: se encarga de correr la aplicación host en un nodo. Este tiene como funciones principales la recepción y el envío de mensajes a través de la red.
 
 router/router.py: archivo principal de los nodos centrales, también llamados routers, que permite a estos ponerse disponibles y empezar a funcionar como punto de enlace para los siguientes host que se integren a la red. Este es el que se encarga de realizar todas las operaciones de ruteo en la red.
 
@@ -86,138 +83,92 @@ Y se digita la información requerida para su inicio.
 
 # Actividades realizadas por el estudiante
 
-Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t ́erminos del tiempo invertido para una actividad espec ́ıfica que impacto directamente el desarrollo del trabajo, de manera breve (no mas de una l ́ınea) se describe lo que se realizo, la cantidad de horas invertidas y la fecha en la que se realizo. Se deben sumar las horas invertidas por cada estudiante, sean conscientes a la hora de realizar esto el profesor determinara si los reportes estan acordes al producto entregado.
+Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t ́erminos del tiempo invertido para una actividad especıfica que impacto directamente el desarrollo del trabajo, de manera breve (no mas de una l ́ınea) se describe lo que se realizo, la cantidad de horas invertidas y la fecha en la que se realizo. Se deben sumar las horas invertidas por cada estudiante, sean conscientes a la hora de realizar esto el profesor determinara si los reportes estan acordes al producto entregado.
 
-Jueves 14 de abril 
-- Trabajamos en el Host:
-    - Envio de mensaje hasta router para que este se encargue de hacerle "forward".
-    - Creacion de "thread" para que muestre el chat preguntando a quien va dirigido el mensaje
-    y su contenido.
-    - Clases ChatClient, HostFactory,
+#### Jueves a viernes 01 de abril
+|                                                      Actividad                                                     |   Tiempo  |
+|:------------------------------------------------------------------------------------------------------------------:|:---------:|
+| Lectura de la especificación.                                                                                      | 20 min    |
+| Reunión con el profesor para aclarar puntos de la tarea.                                                           | 1 hora    |
+| Investigacion de P2P, APIs para redes mesh en Python, servidores IRC (Unreal IRC) y clientes (XChat IRC), Firechat | 3 horas   |
+| Logramos encender el LED de la Raspberry y convertir caracteres a su binario para transmitirlos por medio de luz.  | 1.5 horas |
+| Instalación de Unrealircd (servidor IRC).                                                                          | 15 min    |
+
+#### Lunes 11 de abril
+|                                                       Actividad                                                      |   Tiempo  |
+|:--------------------------------------------------------------------------------------------------------------------:|:---------:|
+| Creación del repositorio.                                                                                            | 15 min    |
+| Diseñando la red y como conectar nodos.                                                                              | 30 min    |
+| Investigación de Twisted. Lectura de creación de clientes y servidores básicos.                                      | 30 min    |
+| Creación de la clase HostManager. Encargada de administrar los host conectados a cada Router.                        | 1.5 horas |
+| Estructura de la clase Router.                                                                                       | 1.5 horas |
+| Agregando estructuras para cliente y servidor. Clases Protocol y Factory para realizar el listenTCP y el connectTCP. | 1.5 horas |
+
+#### Martes 12 de abril
+|                                                                                                  Actividad                                                                                                 |   Tiempo  |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------:|
+| Separación de clase Router en dos clases Router y RouterConnection. RouterConnection registra los usuarios.                                                                                                | 1 hora    |
+| Investigación sobre objetos Diferred de Twisted.                                                                                                                                                           | 2 horas   |
+| Pruebas con objetos Diferred.                                                                                                                                                                              | 2 horas   |
+| Nueva estructura de los componentes del proyecto.                                                                                                                                                          | 20 min    |
+| Creación de clase ConnectionFinder para revisar la lista de routers bien conocidos y establecer contacto con alguno con el fin de obtener la ip y el puerto del router con el cuál establecer la conexión. | 1.5 horas |
+
+#### Jueves 14 de abril
+|                                                 Actividad                                                 |  Tiempo |
+|:---------------------------------------------------------------------------------------------------------:|:-------:|
+| Consultar a los router vecinos para realizar el balanceamiento de carga (asignar host al menos cargado).  | 20 min  |
+| Trabajos en la comunicación entre los router.                                                             | 1 hora  |
+| Creación de clase SocketClient para manejar las conexiones cliente/servidor y realizar envío de mensajes. | 30 min  |
+| Creación de clase Host, para envío de mensajes.                                                           | 30 min  |
+| Investigación extensa del servidor de Twisted para ver si se podía crear un evento para enviar mensajes.  | 2 horas |
+| Envío de mensaje hasta router para que este se encargue de hacerle "forward".                             | 20 min  |
+| Creación de "thread" para que muestre el chat preguntando a quien va dirigido el mensaje y su contenido.  | 20 min  |
+| Clases ChatClient, HostFactory y su estructura básica.                                                    | 1 hora  |
+
+#### Viernes 15 de abril
+|                                                                        Actividad                                                                        |   Tiempo  |
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------:|
+| Modificaciones en la clase HostManager.                                                                                                                 | 30 min    |
+| Verificación de usuarios en toda la red.                                                                                                                | 1.5 horas |
+| Redireccionamiento de mensajes cuando no se encuentra el usuario en la red local.                                                                       | 30 min    |
+| Creación de clase ChatClient.                                                                                                                           | 20 min    |
+| Agregación de un atributo status en los mensajes para notificar al usuario (host) el estado de la petición.                                             | 10 min    |
+| Creación del archivo MarkDown para la documentación, creación de las diferentes secciones y trabajo en la Introducción, Herramientas Usadas y Bitácora. | 1.5 horas |
 
 
-De jueves a viernes 01 de abril
-- Lectura de la especificación.
-- Reunión con el profesor para aclarar puntos de la tarea.
-- Investigacion de P2P, APIs para redes mesh en Python, servidores IRC (Unreal IRC) y clientes (XChat IRC), Firechat
-- Logramos encender el LED de la Raspberry.
+#### Sábado 16 de abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Modificación de la clase RouterConnection para realizar broadcast de un mensaje a la red (se modificaron algunos parámetros). | 30 min |
+| Documentación parcial de código.                                                                                              | 1 hora |
 
-11/04
-- Creación del repositorio.
-- Investigacion de Twisted.
-    -  Lectura de creacion de clientes y servidores básicos.
-- Creación de la clase HostManager.
-    - Encargada de administrar los host conectados a cada Router.
-- Estructura de la clase Router.
-- Agregando estructuras para cliente y servidor.
-    - Clases Protocol y Factory para realizar el listenTCP y el connectTCP.
 
-12/04
-- Separacion de clase Router en dos clases Router y RouterConnection.
-    - RouterConnection registra los usuarios.
-- Investigación sobre objetos Diferred de Twisted.
-- Nueva estructura de los componentes del proyecto.
-- Creación de clase ConnectionFinder para revisar la lista de routers bien conocidos y establecer contacto con alguno con el fin de obtener la ip y el puerto del router con el cuál establecer la conexión.
-
-14/04
-- Consultar a los router vecinos para realizar el balanceamiento de carga (asignar host al menos cargado).
-    - Se trabajó en la comunicación entre los router.
-- Creación de clase SocketCliente para manejar las conexiones cliente-servidor y realizar envío de mensajes.
-    - Encapsula las funciones de conectar y enviar mensajes.
-- Trabajo para realizar envío de mensajes desde el servidor, utilizando el Protocol.
-    - Como el Reactor de Twisted trabajo por eventos, en el Protocol y Factory los métodos se rigen de esa manera, por lo que para enviar un mensaje era necesario crear un método que se comportara como un evento. Tras investigar en la documentación de Twisted nos dimos cuenta de 2 alternativas. Una era añadir un callback al reactor para que ejecutará un método tras cierto tiempo. Sin embargo esto únicamente se realizaba una vez. La otra manera era mediante LoopingCall(task) por medio del cual se establece que se ejecute una tarea cada cierto tiempo. Sin embargo tras varios intentos no se logro que esto funcionará en la clase Protocol ni en la clase Factory del servidor, por lo que se optó por manejar este envío por medio de Sockets.
-    - Creación de clase host, para envio de mensajes.
-
-15/04
-- Modificaciones en la clase HostManager.
-- Verificación de usuarios en toda la red.
-- Redireccionamiento de mensajes cuando no se encuentra el usuario en la red local.
-- Creación de clase ChatClient.
-- Agregación de un atributo status en los mensajes para notificar al usuario (host) el estado de la petición.
-- Creación del archivo MarkDown para la documentación, creación de las diferentes secciones y trabajo en la Introducción, Herramientas Usadas y Bitácora.
-
-16/04
-- Modificación de la clase RouterConnection para realizar broadcast de un mensaje a la red (se modificaron algunos parámetros).
-- Documentación parcial de código.
-
-Martes 05 de abril
-- Implementacion del modelo de datos en Python.
-- Investigacion de Scapy.
-- Llenando el archivo yaml con los servidores conocidos.
-- Creando clases para los distintos tipos de servidores.
-- Investigacion de chat servers/clients con la biblioteca de select en Python.
-- Decisiones para usuarios y subredes en el protocolo.
-
-Sabado 09 de abril
-- Investigacion de IRC Servers y Clients con Twisted
-- Instalacion de Unrealircd
-    - Descarga https://www.unrealircd.org/unrealircd4/unrealircd-4.0.2.tar.gz
-    - Lo descomprime y entra a la carpeta descomprimida
-    - Desde consola (dentro de la carpeta):
-        - ./Config
-        - Luego se presiona Enter
-        - Sale una parte de Notas, con Spacebar baja
-        - Cuando termina vuelve a presionar Enter
-        - Enter otra vez.
-        - Directorio donde se quiere instalar (enter si ya esta ahi)
-        - Enter (permisos se dejan en default)
-        - Enter
-        - No (En la imagen aparece con Yes, pero despues tuve que cambiarlo a No)
-        - No en ambas opciones
-        - Enter
-        - Asegurese tener gcc actualizado porque a mi me dio error el primer intento
-        - Cuando termina de instalar, salen preguntas
-        - Yo cree un certificado por varas
-        - Si no quiere crearlo dele No.
-        - Luego hace make
-        - make install
-        - Ir al directorio donde instalo unrealircd
-        - Copie example.conf de unrealircd/conf/examples/ a unrealircd/conf/ y le cambia el nombre a
-        unrealircd.conf
-        - Abra el unrealircd.conf
-        - Lo primero queda igual
-        - Cambia el Me y Admin
-        - Cambia el bloque de oper
-        - Cambia los cloak-keys, los puede generar con ./unrealircd gencloak
-        - Cambia el kline-address por un correo o URL
-        - El resto queda igual
-        - Lo guarda
-        -
-
-Domingo 10 de abril
-- Debugeando instalacion unrealircd
-- Probando servidor y cliente TCP de twisted
-
-Lunes 11 de abril
-- Programando un server-client TCP, ya funciona.
-- Diseñando la red y como conectar nodos (usuario y registrador).
-- Implementando configManager para manejar yaml.
-- Implementando el cliente con sockets.
-- Trabajando clase RegistryNode
-- Clase UserNode
-- Ya funciona el paso de mensajes; se pueden registrar, agregar vecinos, chequear si existe usuario y anular registro.
-- Comentando secciones de código.
-
-Martes 12 de abril:
-- Implementando el chat (preguntar por mensajes y envío a través de red).
-- Clase prompt printer para impresión de mensajes en consola.
-- Clase msg processor para manejar los strings ingresados por el usuario.
-- Funcionalidad de envío de mensajes a vecinos directos funcionando.
-- Validación de los mensajes ingresados por el usuario.
-- Envío de mensajes dentro de toda la comarca funcionando. Resiste errores cuando algun nodo se desconecta.
-
-Miércoles 13 de abril:
-- Trabajo en RFC basado en el de HTTP/1.1
-
-Jueves 14 de abril:
-- Terminando RFC.
-- Trabajo en la clase de gatewayNode.
+#### Domingo 24 de abril
+Trabajo en RFC basado en el de HTTP/1.1
 
 
 
 # Comentarios finales
 Indicar el estado final en que qued ́o el programa, problemas encontrados y limitaciones adicionales.
 
+
+
 # Conclusiones
 
+Trás la implentación de la red TEC-land se logró comprender mejor como funciona una red, cuáles son las tareas que le corresponden a cada de las capas (física, red, aplicación...) y como estas interactuan entre sí. Las redes son contrucciones complejas que requieren de un diseño correcto acorde a las necesidades que se tengan.
+
+Se tuvo una experiencia de toma de decisiones para la creación del protocolo y el diseño que se utilizarían en la red. En este paso se realizó la escogencia entre los distintos "dispositivos" que se iban a utilizar y como iba a ser la jerarquía entre ellos, por lo que representó un ejercicio ingenieril donde se tuvo que justificar el porqué de las decisiones.
+
+Otro punto a concluir es como cambios pequeños complican o varían considerablemente el envío de paquetes a través de una red. Las conexiones que se escojan y las funciones que se deleguen a cada uno de los dispositivos representan factores importantes que modifican como se va a comportar el flujo de datos desde un punto a otro.
+
+Además, hay que destacar que las jerarquías son puntos determinantes en la red, ya que establecen controles o puntos de comunicación entre dos o más dispositivos que tienen el mismo rol en la jerarquía. Esto permite a los datos subir por los niveles y tomar decisiones de acuerdo al dispositivo en que se encuentre y los datos que lleva el mensaje.
+
+Se pudo fortalezar también el conocimiento sobre el funcionamiento entre las relaciones cliente/servidor, al cada nodo de la red tener que escuchar y al mismo tiempo conectarse a otro dispositivo para enviar un mensaje. Esto representa un modelo ampliamente utilizado para muchas de las tareas que se realizan en computación por lo que tener claro su implementación y algunas aplicaciones representa un insumo importante.
+
+Otro de los beneficios obtenidos trás el proyecto fue el conocimiento de nuevos temas en los que no se tenía experiencia como lo son el protocolo NNTP y el acercamiento a los arduinos para la creacion del medio de transmisión. Este es un campo que normalmente no se explota mucho en computación pero resulta interesante realizar pruebas en la capa física y obtener resultados más tangibles en comparación a como se acostumbra en computación.
+
+
+
+
 # Bibliografía
+

@@ -23,6 +23,6 @@ class ChatClient(protocol.Protocol):
         data = json.loads(data)
         print "\n********************************"
         print "          New Message:         "
-        print "'"+data["from"]+"'", "says", "'"+data["msg"]+"'"
+        print "'"+data["from"]+"'", "says", "'"+data["message"]+"'"
         print "********************************\n"
         self.transport.write("Got your message")

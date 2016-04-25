@@ -53,8 +53,7 @@ class RouterConnection(Protocol):
         provided any action will be taken.
         """
         if data["type"] == "b":
-            self._broadcast_local(data)
-            self._broadcast_network(data)
+            self._check_hashtags(data)
         elif data["type"] == "bl":
             self._broadcast_local(data)
         elif data["type"] == "m":
@@ -73,6 +72,12 @@ class RouterConnection(Protocol):
             self.send_message(data)
         elif data["type"] == 'fw':
             self._send_to(data)
+            self._write({"msg": "Message Delivered"})
+        elif data["type"] == "rb":
+            self.look_place_for_bot(data)
+        elif data["type"] == "rbl":
+            self.register_bot(data)
+
         else:
             self.transport.write("I don't know what to do with that.")
 
@@ -102,6 +107,19 @@ class RouterConnection(Protocol):
 
         self._write({"msg": "Username already taken"}, -1)
         self.username = ""
+
+    def look_place_for_bot(self, data):
+        if not self.factory.host_manager.exists(data["bot_type"]):
+            self._write({"ip": self.ip, "port": self.port})
+        else:
+            self._send_to_routers({"type": "qu", "username": data["bot_type"]}, self.accept_bot)
+            self._write({"ip": self.response["ip"], "port": self.response["port"]})
+
+    def register_bot(self, data):
+        ip, _ = self.transport.client
+        connection = {"ip": ip, "port": data["port"], "username": data["username"]}
+        self.factory.host_manager.register(connection)
+        self._write({"msg": "Registration successfully."})
 
     def _send_to_routers(self, data, func=None):
         """ Send data to all the routers on the network.
@@ -150,6 +168,12 @@ class RouterConnection(Protocol):
             self.response = router
             return True
 
+    def accept_bot(self, router, response):
+        response = json.loads(response)
+        if not response["exists"]:
+            self.response = router
+            return True
+
     def get_connections(self):
         self.transport.write(str(self.factory.numConnections))
 
@@ -160,6 +184,7 @@ class RouterConnection(Protocol):
     def send_message(self, data):
         if self.factory.host_manager.exists(data["to"]):
             self._send_to(data)
+            self._write({"msg": "Message Delivered"})
         else:
             print "Consulting routers to user"
             self._send_to_routers({"type": 'qu', "username": data["to"]}, self.user_on_router)
@@ -178,12 +203,9 @@ class RouterConnection(Protocol):
             user_info = self.factory.host_manager.get_user(data["to"])
 
         sc = SocketClient(user_info["ip"], user_info["port"], 1)
-        response = sc.send(data)
-        print response, "FUNTION _SENT_TO"
-        self._write({"msg": "Message Delivered"})
+        sc.send(data)
 
     def _get_best_router(self):
-
         if not self.routers:
             self._write({"ip": self.ip, "port": self.port})
             return
@@ -217,3 +239,36 @@ class RouterConnection(Protocol):
     def _broadcast_network(self, data):
         data["type"] = "bl"
         self._send_to_routers(data)
+
+    def _check_hashtags(self, data):
+        print data
+        hashtags = data["hashtags"]
+        if "#itsATrap" in hashtags and "#publico" in hashtags:
+            # TODO broadcast to nntp
+            self._broadcast(data)
+            self._send_to_irc(data)
+
+        elif "#publico" in hashtags:
+            self._broadcast(data)
+            self._send_to_irc(data)
+            self._write({"msg": "Message Delivered"})
+
+        elif "#itsATrap" in hashtags:
+            self._broadcast(data)
+            self._write({"msg": "Message Delivered"})
+        else:
+            self._write({"msg": "No valid hashtags provided"})
+
+    def _broadcast(self, data):
+        self._broadcast_local(data)
+        self._broadcast_network(data)
+
+    def _send_to_irc(self, data):
+        if self.factory.host_manager.exists("ircbot"):
+            user_info = self.factory.host_manager.get_user("ircbot")
+            print user_info
+
+            sc = SocketClient(user_info["ip"], user_info["port"], 1)
+            if sc.status():
+                response = sc.send({"message": data["message"], "from": data["from"]})
+                print response

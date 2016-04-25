@@ -17,6 +17,9 @@ from config import HostConfig
 # Class that looks for an available
 # router and asks for the router
 # with less connections.
+from model.socketClient import SocketClient
+
+
 class ConnectionFinder:
     def __init__(self, wks=HostConfig.WKS):
         self.wks_file = wks
@@ -36,25 +39,22 @@ class ConnectionFinder:
     # Ask what router should the host connect
     def look_for_router(self):
         found = False
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s = None
         for router in self.routers:
-            print router
-            try:
                 ip = router["ip"]
                 port = int(router["port"])
-                s.connect((ip, port))
-
-                s.send(json.dumps({"type": 'n'}))
-                print "Server %s is up and running!" % router["ip"]
-                found = True
-                break
-            except socket.error as e:
+                s = SocketClient(ip, port)
+                if s.status():
+                    print "Server %s is up and running!" % router["ip"]
+                    found = True
+                    break
                 print "Server %s is not running" % router["ip"]
         if found:
-            data = s.recv(2048)
+            data = s.send({"type": 'n'})
+            print data
             data = json.loads(data)
             s.close()
             return [data["ip"], data["port"]]
-
-        s.close()
+        if s:
+            s.close()
         return [None, None]

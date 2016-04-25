@@ -10,16 +10,27 @@ Estudiantes:
 I Semestre 2016
 """
 
+import json
 
 class Message:
 
-    def __init__(self, m_from, m_to, content):
-        self.mfrom = m_from
+    def __init__(self, m_from, m_to, content, type="m"):
+        self.m_from = m_from
         self.to = m_to
         self.hashtags = []
         self.text = content
+        self.type = type
         self._extract_hash_tags()
 
     def _extract_hash_tags(self):
         words = self.text.split(' ')
         self.hashtags = [word for word in words if word[0] == '#']
+
+    def to_dict(self):
+        return {
+            "message": self.text,
+            "from": self.m_from,
+            "to": self.to,
+            "hashtags": json.dumps(self.hashtags),
+            "type": self.type
+        }
