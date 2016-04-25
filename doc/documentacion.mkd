@@ -102,6 +102,44 @@ De jueves a viernes 01 de abril
 - Investigacion de P2P, APIs para redes mesh en Python, servidores IRC (Unreal IRC) y clientes (XChat IRC), Firechat
 - Logramos encender el LED de la Raspberry.
 
+11/04
+- Creación del repositorio.
+- Investigacion de Twisted.
+    -  Lectura de creacion de clientes y servidores básicos.
+- Creación de la clase HostManager.
+    - Encargada de administrar los host conectados a cada Router.
+- Estructura de la clase Router.
+- Agregando estructuras para cliente y servidor.
+    - Clases Protocol y Factory para realizar el listenTCP y el connectTCP.
+
+12/04
+- Separacion de clase Router en dos clases Router y RouterConnection.
+    - RouterConnection registra los usuarios.
+- Investigación sobre objetos Diferred de Twisted.
+- Nueva estructura de los componentes del proyecto.
+- Creación de clase ConnectionFinder para revisar la lista de routers bien conocidos y establecer contacto con alguno con el fin de obtener la ip y el puerto del router con el cuál establecer la conexión.
+
+14/04
+- Consultar a los router vecinos para realizar el balanceamiento de carga (asignar host al menos cargado).
+    - Se trabajó en la comunicación entre los router.
+- Creación de clase SocketCliente para manejar las conexiones cliente-servidor y realizar envío de mensajes.
+    - Encapsula las funciones de conectar y enviar mensajes.
+- Trabajo para realizar envío de mensajes desde el servidor, utilizando el Protocol.
+    - Como el Reactor de Twisted trabajo por eventos, en el Protocol y Factory los métodos se rigen de esa manera, por lo que para enviar un mensaje era necesario crear un método que se comportara como un evento. Tras investigar en la documentación de Twisted nos dimos cuenta de 2 alternativas. Una era añadir un callback al reactor para que ejecutará un método tras cierto tiempo. Sin embargo esto únicamente se realizaba una vez. La otra manera era mediante LoopingCall(task) por medio del cual se establece que se ejecute una tarea cada cierto tiempo. Sin embargo tras varios intentos no se logro que esto funcionará en la clase Protocol ni en la clase Factory del servidor, por lo que se optó por manejar este envío por medio de Sockets.
+    - Creación de clase host, para envio de mensajes.
+
+15/04
+- Modificaciones en la clase HostManager.
+- Verificación de usuarios en toda la red.
+- Redireccionamiento de mensajes cuando no se encuentra el usuario en la red local.
+- Creación de clase ChatClient.
+- Agregación de un atributo status en los mensajes para notificar al usuario (host) el estado de la petición.
+- Creación del archivo MarkDown para la documentación, creación de las diferentes secciones y trabajo en la Introducción, Herramientas Usadas y Bitácora.
+
+16/04
+- Modificación de la clase RouterConnection para realizar broadcast de un mensaje a la red (se modificaron algunos parámetros).
+- Documentación parcial de código.
+
 Martes 05 de abril
 - Implementacion del modelo de datos en Python.
 - Investigacion de Scapy.
