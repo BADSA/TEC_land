@@ -1,10 +1,7 @@
-
 from twisted.internet import protocol, reactor
+from ircClientFactory import IRCClientFactory
 from listener import Listener
-from bots.irc.client.ircClientFactory import IRCClientFactory
 
-# Factory that allows to handle the
-# incoming messages
 
 class IRCListenerFactory(protocol.Factory):
     def __init__(self, network, irc_port, channel):

@@ -1,6 +1,4 @@
-
 from twisted.internet import reactor, protocol
-
 from ircClient import IRCClient
 
 

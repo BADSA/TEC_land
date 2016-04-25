@@ -30,10 +30,14 @@ def chat(myuser):
         if "#" not in text:
             to = raw_input("Receiver: ")
             data = Message(myuser, to, text).to_dict()
-            host.send(data)
+            response = host.send(data)
         else:
             data = Message(myuser, None, text, 'b').to_dict()
-            host.send(data)
+            response = host.send(data)
+        if response["status"] == -1:
+            print ""
+            print response["msg"]
+            print ""
 
 # Point of start for a TEC-Land Host
 if __name__ == '__main__':
@@ -50,12 +54,13 @@ if __name__ == '__main__':
     myuser = ""
     if args.ip and args.port:
         host = Host(args.ip, args.port)
-        myuser = host.register_user()
+        myuser = host.register_user(HostConfig.LISTENPORT)
     else:
         print "Dynamic Binding"
         ip, port = conMan.look_for_router()
         host = Host(ip, port)
         if ip is not None:
+            print ""
             myuser = host.register_user(HostConfig.LISTENPORT)
         else:
             print "No routers available"

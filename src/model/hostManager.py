@@ -25,7 +25,6 @@ class HostManager:
 
         if self.check_loaded(username):
             return True
-        print "User is OK"
         return False
 
     def register(self, host):
@@ -52,7 +51,6 @@ class HostManager:
 
     def get_user(self, user):
         user_info = [host for host in self.hosts if host["username"] == user]
-        print user_info
         return user_info[0]
 
     def get_users(self):

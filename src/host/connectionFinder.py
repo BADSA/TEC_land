@@ -32,7 +32,6 @@ class ConnectionFinder:
             fieldnames = ['name', 'ip', 'port']
             routers = csv.DictReader(wks_file, fieldnames=fieldnames)
             for router in routers:
-                print router
                 list.append(router)
         return list
 
@@ -45,13 +44,12 @@ class ConnectionFinder:
                 port = int(router["port"])
                 s = SocketClient(ip, port)
                 if s.status():
-                    print "Server %s is up and running!" % router["ip"]
+                    print "Server {0} is up and running on port {1}".format(router["ip"], router["port"])
                     found = True
                     break
                 print "Server %s is not running" % router["ip"]
         if found:
             data = s.send({"type": 'n'})
-            print data
             data = json.loads(data)
             s.close()
             return [data["ip"], data["port"]]

@@ -31,8 +31,8 @@ class Host:
             print 'Could not send to {}:{}\n'.format(self.router_ip, self.router_port)
             return None
 
-        print response, "Response"
         response = json.loads(response)
+
         return response
 
     def register_user(self, listen_port):
@@ -40,6 +40,6 @@ class Host:
         data = {"type": 'r', "username": username, "port": listen_port}
         response = self.send(data)
         if response["status"] == -1:
-            print "Username already taken, choose another one."
-            self.register_user()
+            print response["msg"]
+            return self.register_user(listen_port)
         return username
