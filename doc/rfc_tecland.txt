@@ -25,21 +25,19 @@ Category: Standards Track                                   Compaq/W3C
 
 Abstract
 
-   The Hypertext Transfer Protocol (HTTP) is an application-level
-   protocol for distributed, collaborative, hypermedia information
-   systems. It is a generic, stateless, protocol which can be used for
-   many tasks beyond its use for hypertext, such as name servers and
-   distributed object management systems, through extension of its
-   request methods, error codes and headers [47]. A feature of HTTP is
-   the typing and negotiation of data representation, allowing systems
-   to be built independently of the data being transferred.
+   The PCSD is a message transfer protocol for networks. This looks forward 
+   for an easy sending with few devices to traverse from origin to 
+   destination. The protocol arises as part of a project of the Costa Rica
+   Institute of Technology with educational purpuses. It is a generic, stateless
+   protocol which can be modified and used for other tasks beyond its use for
+   message (chat). A feature if PCSD is its charge balancing method to assign
+   hosts to the less charged routers.
 
-   HTTP has been in use by the World-Wide Web global information
-   initiative since 1990. This specification defines the protocol
-   referred to as "HTTP/1.1", and is an update to RFC 2068 [33].
+   This specification defines the protocol referred to as "PCSD/1.0" and 
+   next updates will be reflected in this document.
 
 
-1 Introduction
+1 Introducción
 
 1.1 Purpose
 PCSD es un protocolo para el traspaso de mensajes en una red. Este busca que 
@@ -58,72 +56,208 @@ realizan diversas funciones como lo son la publicación de un mensaje en un
 canal de un servidor IRC público o en un servidor NNTP, o bien, el envío de 
 un mensaje por el medio de transmisión hasta otra comarca.
 
-1.2 Requirements
+1.2 Requerimientos
 
 
-1.3 Terminology
+1.3 Terminología
+
+   This specification uses a number of terms to refer to the roles
+   played by participants in, and objects of, the HTTP communication.
+
+   connection
+      A transport layer virtual circuit established between two programs
+      for the purpose of communication.
+
+   message
+      The basic unit of HTTP communication, consisting of a structured
+      sequence of octets matching the syntax defined in section 4 and
+      transmitted via the connection.
+
+   request
+      An HTTP request message, as defined in section 5.
+
+   response
+      An HTTP response message, as defined in section 6.
+
+   resource
+      A network data object or service that can be identified by a URI,
+      as defined in section 3.2. Resources may be available in multiple
+      representations (e.g. multiple languages, data formats, size, and
+      resolutions) or vary in other ways.
+
+   entity
+      The information transferred as the payload of a request or
+      response. An entity consists of metainformation in the form of
+      entity-header fields and content in the form of an entity-body, as
+      described in section 7.
+
+   representation
+      An entity included with a response that is subject to content
+      negotiation, as described in section 12. There may exist multiple
+      representations associated with a particular response status.
+
+   content negotiation
+      The mechanism for selecting the appropriate representation when
+      servicing a request, as described in section 12. The
+      representation of entities in any response can be negotiated
+      (including error responses).
+
+   variant
+      A resource may have one, or more than one, representation(s)
+      associated with it at any given instant. Each of these
+      representations is termed a `varriant'.  Use of the term `variant'
+      does not necessarily imply that the resource is subject to content
+      negotiation.
+
+   client
+      A program that establishes connections for the purpose of sending
+      requests.
+
+   user agent
+      The client which initiates a request. These are often browsers,
+      editors, spiders (web-traversing robots), or other end user tools.
+
+   server
+      An application program that accepts connections in order to
+      service requests by sending back responses. Any given program may
+      be capable of being both a client and a server; our use of these
+      terms refers only to the role being performed by the program for a
+      particular connection, rather than to the program's capabilities
+      in general. Likewise, any server may act as an origin server,
+      proxy, gateway, or tunnel, switching behavior based on the nature
+      of each request.
+
+   origin server
+      The server on which a given resource resides or is to be created.
+
+   proxy
+      An intermediary program which acts as both a server and a client
+      for the purpose of making requests on behalf of other clients.
+      Requests are serviced internally or by passing them on, with
+      possible translation, to other servers. A proxy MUST implement
+      both the client and server requirements of this specification. A
+      "transparent proxy" is a proxy that does not modify the request or
+      response beyond what is required for proxy authentication and
+      identification. A "non-transparent proxy" is a proxy that modifies
+      the request or response in order to provide some added service to
+      the user agent, such as group annotation services, media type
+      transformation, protocol reduction, or anonymity filtering. Except
+      where either transparent or non-transparent behavior is explicitly
+      stated, the HTTP proxy requirements apply to both types of
+      proxies.
+
+   gateway
+      A server which acts as an intermediary for some other server.
+      Unlike a proxy, a gateway receives requests as if it were the
+      origin server for the requested resource; the requesting client
+      may not be aware that it is communicating with a gateway.
+
+   tunnel
+      An intermediary program which is acting as a blind relay between
+      two connections. Once active, a tunnel is not considered a party
+      to the HTTP communication, though the tunnel may have been
+      initiated by an HTTP request. The tunnel ceases to exist when both
+      ends of the relayed connections are closed.
+
+   cache
+      A program's local store of response messages and the subsystem
+      that controls its message storage, retrieval, and deletion. A
+      cache stores cacheable responses in order to reduce the response
+      time and network bandwidth consumption on future, equivalent
+      requests. Any client or server may include a cache, though a cache
+      cannot be used by a server that is acting as a tunnel.
+
+   cacheable
+      A response is cacheable if a cache is allowed to store a copy of
+      the response message for use in answering subsequent requests. The
+      rules for determining the cacheability of HTTP responses are
+      defined in section 13. Even if a resource is cacheable, there may
+      be additional constraints on whether a cache can use the cached
+      copy for a particular request.
+
+   first-hand
+      A response is first-hand if it comes directly and without
+      unnecessary delay from the origin server, perhaps via one or more
+      proxies. A response is also first-hand if its validity has just
+      been checked directly with the origin server.
+
+   explicit expiration time
+      The time at which the origin server intends that an entity should
+      no longer be returned by a cache without further validation.
+
+   heuristic expiration time
+      An expiration time assigned by a cache when no explicit expiration
+      time is available.
+
+   age
+      The age of a response is the time since it was sent by, or
+      successfully validated with, the origin server.
+
+   freshness lifetime
+      The length of time between the generation of a response and its
+      expiration time.
+
+   fresh
+      A response is fresh if its age has not yet exceeded its freshness
+      lifetime.
+
+   stale
+      A response is stale if its age has passed its freshness lifetime.
+
+   semantically transparent
+      A cache behaves in a "semantically transparent" manner, with
+      respect to a particular response, when its use affects neither the
+      requesting client nor the origin server, except to improve
+      performance. When a cache is semantically transparent, the client
+      receives exactly the same response (except for hop-by-hop headers)
+      that it would have received had its request been handled directly
+      by the origin server.
+
+   validator
+      A protocol element (e.g., an entity tag or a Last-Modified time)
+      that is used to find out whether a cache entry is an equivalent
+      copy of an entity.
+
+   upstream/downstream
+      Upstream and downstream describe the flow of a message: all
+      messages flow from upstream to downstream.
+
+   inbound/outbound
+      Inbound and outbound refer to the request and response paths for
+      messages: "inbound" means "traveling toward the origin server",
+      and "outbound" means "traveling toward the user agent"      
+
+1.4 Operación General
 
 
-1.4 Overall Operation
+3 Parámetros del Protocolo
 
+3.1 Versión de PCSD
 
-3 Protocol Parameters
+   PCSD usa un esquema de numeración "<mayor>.<menor>" para indicar las 
+   versiones del protocolo.  La política de control de versiones de protocolo 
+   está destinado a permitir al remitente indicar el formato de un mensaje y 
+   su capacidad de una mayor comprensión de la comunicación PCSD, en lugar de 
+   las características obtenidas a través de dicha comunicación. No se realizan 
+   cambios al número de la versión si la adición de componentes del mensaje que 
+   no afectan el comportamiento de la comunicación o que sólo añaden valores de 
+   campo extras. El número <menor> se incrementa cuando los cambios realizados 
+   en el protocolo añaden características que no cambian la forma de enviar 
+   mensajes, pero que pueden añadir semántica a los mensajes e implican
+   capacidades adicionales del receptor. El número <mayor> es aumentado cuando 
+   el formato de un mensaje en el protocolo es cambiado. 
 
-3.1 HTTP Version
+   Tenga en cuenta que los números mayores y menores deben ser tratados como 
+   enteros separados y que cada uno puede incrementarse más que un solo dígito.
+   Por lo tanto, PCSD / 2.4 es una versión inferior a PCSD / 2.13, que a su vez 
+   es inferior a PCSD / 12.3. Ceros a la izquierda deberá ser ignorada por los 
+   destinatarios y NO DEBE ser enviado.
 
-   HTTP uses a "<major>.<minor>" numbering scheme to indicate versions
-   of the protocol. The protocol versioning policy is intended to allow
-   the sender to indicate the format of a message and its capacity for
-   understanding further HTTP communication, rather than the features
-   obtained via that communication. No change is made to the version
-   number for the addition of message components which do not affect
-   communication behavior or which only add to extensible field values.
-   The <minor> number is incremented when the changes made to the
-   protocol add features which do not change the general message parsing
-   algorithm, but which may add to the message semantics and imply
-   additional capabilities of the sender. The <major> number is
-   incremented when the format of a message within the protocol is
-   changed. See RFC 2145 [36] for a fuller explanation.
-
-   The version of an HTTP message is indicated by an HTTP-Version field
-   in the first line of the message.
-
-       HTTP-Version   = "HTTP" "/" 1*DIGIT "." 1*DIGIT
-
-   Note that the major and minor numbers MUST be treated as separate
-   integers and that each MAY be incremented higher than a single digit.
-   Thus, HTTP/2.4 is a lower version than HTTP/2.13, which in turn is
-   lower than HTTP/12.3. Leading zeros MUST be ignored by recipients and
-   MUST NOT be sent.
-
-   An application that sends a request or response message that includes
-   HTTP-Version of "HTTP/1.1" MUST be at least conditionally compliant
-   with this specification. Applications that are at least conditionally
-   compliant with this specification SHOULD use an HTTP-Version of
-   "HTTP/1.1" in their messages, and MUST do so for any message that is
-   not compatible with HTTP/1.0. For more details on when to send
-   specific HTTP-Version values, see RFC 2145 [36].
-
-   The HTTP version of an application is the highest HTTP version for
-   which the application is at least conditionally compliant.
-
-   Proxy and gateway applications need to be careful when forwarding
-   messages in protocol versions different from that of the application.
-   Since the protocol version indicates the protocol capability of the
-   sender, a proxy/gateway MUST NOT send a message with a version
-   indicator which is greater than its actual version. If a higher
-   version request is received, the proxy/gateway MUST either downgrade
-   the request version, or respond with an error, or switch to tunnel
-   behavior.
-
-   Due to interoperability problems with HTTP/1.0 proxies discovered
-   since the publication of RFC 2068[33], caching proxies MUST, gateways
-   MAY, and tunnels MUST NOT upgrade the request to the highest version
-   they support. The proxy/gateway's response to that request MUST be in
-   the same major version as the request.
-
-      Note: Converting between versions of HTTP may involve modification
-      of header fields required or forbidden by the versions involved.
+   Host (endpoints) y Routers deben tener cuidado cuando reenvían mensajes en 
+   versiones de protocolo diferentes de la de la aplicación. Como la versión 
+   indica la capacidad del protocolo del remitente, un Host/Router NO DEBE enviar 
+   un mensaje con una versión que es mayor que su versión actual. Si una solicitud 
+   con una versión mayor es recibida, el Host/Router debe responder con un error.
 
 
 4 HTTP Message
