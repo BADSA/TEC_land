@@ -1,3 +1,15 @@
+# coding=utf-8
+"""
+Instituto Tecnológico de Costa Rica
+Ingeniería en Computación
+Redes de Computadoras
+Profesor: Kevin Moraga
+Estudiantes:
+    Daniel Solís Méndez
+    Melvin Elizondo Pérez
+I Semestre 2016
+"""
+
 from socket import socket, AF_INET, SOCK_STREAM, error
 import json
 

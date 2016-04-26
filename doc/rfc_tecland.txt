@@ -4,237 +4,166 @@
 
 
 
-Network Working Group                                      R. Fielding
-Request for Comments: 2616                                   UC Irvine
-Obsoletes: 2068                                              J. Gettys
-Category: Standards Track                                   Compaq/W3C
-                                                              J. Mogul
-                                                                Compaq
-                                                            H. Frystyk
-                                                               W3C/MIT
-                                                           L. Masinter
-                                                                 Xerox
-                                                              P. Leach
-                                                             Microsoft
-                                                        T. Berners-Lee
-                                                               W3C/MIT
-                                                             June 1999
+BADSA Group                                               Daniel Solís    
+Request for Comments: 9999                                        ITCR
+                                                       Melvin Elizondo
+                                                                  ITCR
+                                                            Abril 2016
 
 
-                Hypertext Transfer Protocol -- HTTP/1.1
+                Badsa Transfer Protocol -- BTP/1.0
 
 Abstract
 
-   The PCSD is a message transfer protocol for networks. This looks forward
-   for an easy sending with few devices to traverse from origin to
-   destination. The protocol arises as part of a project of the Costa Rica
-   Institute of Technology with educational purpuses. It is a generic, stateless
-   protocol which can be modified and used for other tasks beyond its use for
-   message (chat). A feature if PCSD is its charge balancing method to assign
-   hosts to the less charged routers.
+   The BTP is a message transfer protocol for networks. This looks 
+   forward for an easy sending with few devices to traverse from origin 
+   to destination. The protocol arises as part of a project of the 
+   Costa Rica Institute of Technology with educational purpuses. It is 
+   a generic, stateless protocol which can be modified and used for 
+   other  tasks beyond its use for message (chat). A feature if BTP is 
+   its charge balancing method to assign hosts to the less charged 
+   routers.
 
-   This specification defines the protocol referred to as "PCSD/1.0" and
-   next updates will be reflected in this document.
+   This specification defines the protocol referred to as "BTP/1.0" 
+   and next updates will be reflected in this document.
 
 
 1 Introducción
 
 1.1 Purpose
-PCSD es un protocolo para el traspaso de mensajes en una red. Este busca que
-el envío sea lo más sencillo posible y que no tenga que atravesar demasiados
-dispositivos para llegar desde su origen hasta su destino. PCSD surge como
-parte de un proyecto del Instituto Tecnológico de Costa Rica con propósitos
-educativos. Para su primer versión, es un simple protocolo para transferencia
-de mensajes de texto plano para comunicación entre dos puntos (tipo chat).
-La jerarquía por la que se rige el protocolo consiste en puntos de conexión
-para los *endpoints* llamados *routers* cuya función es determinar hacia donde
-se dirige el mensaje y enviarlo para que este puede llegar a su destino. Los
-routers son los dispositivos que se encargan de registrar endpoints, enviar
-mensajes a un endpoint específico, hacer broadcast de un mensaje, entre otros.
-Dentro de la red existen también algunos dispositivos llamados *bots* que
-realizan diversas funciones como lo son la publicación de un mensaje en un
-canal de un servidor IRC público o en un servidor NNTP, o bien, el envío de
-un mensaje por el medio de transmisión hasta otra comarca.
+
+BTP es un protocolo para el traspaso de mensajes en una red. Este busca 
+que el envío sea lo más sencillo posible y que no tenga que atravesar 
+demasiados dispositivos para llegar desde su origen hasta su destino. BTP 
+surge como parte de un proyecto del Instituto Tecnológico de Costa Rica 
+con propósitos educativos. Para su primer versión, es un simple protocolo 
+para transferencia de mensajes de texto plano para comunicación entre dos 
+puntos (tipo chat). La jerarquía por la que se rige el protocolo consiste 
+en puntos de conexión para los *endpoints* llamados *routers* cuya función 
+es determinar hacia donde se dirige el mensaje y enviarlo para que este 
+puede llegar a su destino. Los routers son los dispositivos que se encargan 
+de registrar endpoints, enviar mensajes a un endpoint específico, hacer 
+broadcast de un mensaje, entre otros. Dentro de la red existen también 
+algunos dispositivos llamados *bots* que realizan diversas funciones como 
+lo son la publicación de un mensaje en un canal de un servidor IRC público 
+o en un servidor NNTP, o bien, el envío de un mensaje por el medio de 
+transmisión hasta otra comarca.
 
 1.2 Requerimientos
 
 
 1.3 Terminología
 
-   This specification uses a number of terms to refer to the roles
-   played by participants in, and objects of, the HTTP communication.
+   Esta especificación usa varios términos para referirse a los roles que 
+   ejercen los dispositivos en la red y los distintos objetos que 
+   intervienen en la comunicación.
 
-   connection
-      Capa de transporte establecida como los sockets abiertos y disponibles
-      para la lectura y escritura de mensajes. (FID file descriptor)
+   bot
+      Concepto usado para referirse a un programa informático que imita 
+      el comportamiento humano. En el caso del protocolo existen tres 
+      tipos de bot que son: el encargado de publicar en IRC, en NNTP y 
+      el que controla el medio de transmisión para enviar mensajes a 
+      otras comarcas.
 
-   message
-      Unidad básica de la comunicación definida como una cadena de caracteres
-      (string) que se escribe por medio de la conexión.
+   router
+      Dispositivo principal de la red que se encarga de enviar los 
+      mensajes  hasta su destino o bien al siguiente router que pueda 
+      hacer llegar  el mensaje a el usuario al que va dirigido.
 
-   request
-      An HTTP request message, as defined in section 5.
+   host
+      Punto de conexión de los usuarios. Aquí es donde escogen un nombre
+      de usuario que los identifique en la red para poder empezar a enviar 
+      mensajes.
 
-   response
-      An HTTP response message, as defined in section 6.
+   socket
+      Concepto abstracto por el cual dos programas pueden intercambiar 
+      cualquier flujo de datos, generalmente de manera fiable y ordenada. 
+      Utilizado de manera regular para intercambios por red.
 
-   resource
+   nntp
+      Protocolo para la transferencia de noticias en red. Es usado por uno 
+      de  los bot para la publicación de mensajes que cumplen con ciertas
+      características.
+
+   irc
+       Protocolo de comunicación en tiempo real basado en texto. Es 
+       ampliamente utilizado por personas de todo el mundo.
+
+   raspberry pi
+      Dispositivo utilizado en el medio de tranmisión para la emisión y 
+      recepción de las ondas de luz que son utilizadas para representar los 
+      mensajes.
+
+   connection/conexión
+      Capa de transporte establecida como los sockets abiertos y 
+      disponibles para la lectura y escritura de mensajes. (FID file 
+      descriptor).
+
+   message/mensaje
+      Unidad básica de la comunicación definida como una cadena de 
+      caracteres (string) que se escribe por medio de la conexión.
+
+   response/respuesta
+      Respuesta de los router BTP a los mensajes que fueron enviados por 
+      los hosts.
+
+   resource/recurso
       Un host de la red identificado por una IP y un número de puerto
       por el cual se realiza la conexión entre los otros host de la red.
 
-   entity
-      The information transferred as the payload of a request or
-      response. An entity consists of metainformation in the form of
-      entity-header fields and content in the form of an entity-body, as
-      described in section 7.
+   router negotiation/negociación de router
+      El mecanismo para seleccionar el router apropiado para establecer
+      una nueva conexión, basado en la cantidad actual de conexiones.
 
-   representation
-      An entity included with a response that is subject to content
-      negotiation, as described in section 12. There may exist multiple
-      representations associated with a particular response status.
+   client/cliente
+      Un programa que utiliza un router para registrar su identidad con el
+      propósito de enviar y recibir mensajes por medio de él.
 
-   content negotiation
-      The mechanism for selecting the appropriate representation when
-      servicing a request, as described in section 12. The
-      representation of entities in any response can be negotiated
-      (including error responses).
-
-   variant
-      A resource may have one, or more than one, representation(s)
-      associated with it at any given instant. Each of these
-      representations is termed a `varriant'.  Use of the term `variant'
-      does not necessarily imply that the resource is subject to content
-      negotiation.
-
-   client
-      Un programa que utiliza un router para registrar su identición con el
-      proposito de enviar y recibir paquetes por medio de él.
-
-   user agent
-      La consola o programa que pueda ejecutar un cliente para el envio y
+   user agent/agente de usuario
+      La consola o programa que pueda ejecutar un cliente para el envío y
       recepción de mensajes.
 
-   server
-      An application program that accepts connections in order to
-      service requests by sending back responses. Any given program may
-      be capable of being both a client and a server; our use of these
-      terms refers only to the role being performed by the program for a
-      particular connection, rather than to the program's capabilities
-      in general. Likewise, any server may act as an origin server,
-      proxy, gateway, or tunnel, switching behavior based on the nature
-      of each request.
-
-   origin server
-      The server on which a given resource resides or is to be created.
-
-   proxy
-      An intermediary program which acts as both a server and a client
-      for the purpose of making requests on behalf of other clients.
-      Requests are serviced internally or by passing them on, with
-      possible translation, to other servers. A proxy MUST implement
-      both the client and server requirements of this specification. A
-      "transparent proxy" is a proxy that does not modify the request or
-      response beyond what is required for proxy authentication and
-      identification. A "non-transparent proxy" is a proxy that modifies
-      the request or response in order to provide some added service to
-      the user agent, such as group annotation services, media type
-      transformation, protocol reduction, or anonymity filtering. Except
-      where either transparent or non-transparent behavior is explicitly
-      stated, the HTTP proxy requirements apply to both types of
-      proxies.
-
-   gateway
-      A server which acts as an intermediary for some other server.
-      Unlike a proxy, a gateway receives requests as if it were the
-      origin server for the requested resource; the requesting client
-      may not be aware that it is communicating with a gateway.
-
-   tunnel
-      An intermediary program which is acting as a blind relay between
-      two connections. Once active, a tunnel is not considered a party
-      to the HTTP communication, though the tunnel may have been
-      initiated by an HTTP request. The tunnel ceases to exist when both
-      ends of the relayed connections are closed.
-
-   cache
-      A program's local store of response messages and the subsystem
-      that controls its message storage, retrieval, and deletion. A
-      cache stores cacheable responses in order to reduce the response
-      time and network bandwidth consumption on future, equivalent
-      requests. Any client or server may include a cache, though a cache
-      cannot be used by a server that is acting as a tunnel.
-
-   cacheable
-      A response is cacheable if a cache is allowed to store a copy of
-      the response message for use in answering subsequent requests. The
-      rules for determining the cacheability of HTTP responses are
-      defined in section 13. Even if a resource is cacheable, there may
-      be additional constraints on whether a cache can use the cached
-      copy for a particular request.
-
-   first-hand
-      A response is first-hand if it comes directly and without
-      unnecessary delay from the origin server, perhaps via one or more
-      proxies. A response is also first-hand if its validity has just
-      been checked directly with the origin server.
-
-   explicit expiration time
-      The time at which the origin server intends that an entity should
-      no longer be returned by a cache without further validation.
-
-   heuristic expiration time
-      An expiration time assigned by a cache when no explicit expiration
-      time is available.
-
-   age
-      The age of a response is the time since it was sent by, or
-      successfully validated with, the origin server.
-
-   freshness lifetime
-      The length of time between the generation of a response and its
-      expiration time.
-
-   fresh
-      A response is fresh if its age has not yet exceeded its freshness
-      lifetime.
-
-   stale
-      A response is stale if its age has passed its freshness lifetime.
-
-   semantically transparent
-      A cache behaves in a "semantically transparent" manner, with
-      respect to a particular response, when its use affects neither the
-      requesting client nor the origin server, except to improve
-      performance. When a cache is semantically transparent, the client
-      receives exactly the same response (except for hop-by-hop headers)
-      that it would have received had its request been handled directly
-      by the origin server.
-
-   validator
-      A protocol element (e.g., an entity tag or a Last-Modified time)
-      that is used to find out whether a cache entry is an equivalent
-      copy of an entity.
-
-   upstream/downstream
-      Upstream and downstream describe the flow of a message: all
-      messages flow from upstream to downstream.
-
-   inbound/outbound
-      Inbound and outbound refer to the request and response paths for
-      messages: "inbound" means "traveling toward the origin server",
-      and "outbound" means "traveling toward the user agent"
+   server/servidor
+      Un programa que acepta conexiones para servir como punto de envío de
+      mensajes. En caso del protocolo tanto los Host como los Router son 
+      servidores.
 
 1.4 Operación General
+
+BTP es un protocolo para el envío de mensajes de texto a través de la red 
+que consiste principalmente de dos tipos de dispositivos: host y router. 
+Los host representan los puntos finales de la red donde los usuarios deben 
+escoger un nombre que los represente de manera única, para la recepción y 
+envío de mensajes. Cada vez que un host se quiere incorporar a la red, este 
+debe establecer conexión con alguno de los router bien conocidos que se 
+encuentran en su lista, para enviar una consulta solicitando la información 
+de su punto de conexión. Es entonces cuando los router mantienen un 
+intercambio de información para ver cuál de ellos es el que se encuentra más 
+libre. Una vez obtenidos los datos del router (ip, puerto)  se procede a 
+indicarle al host cual será su punto de conexión. A partir de ese momento el 
+host ya forma parte de la red TEC-land y podrá enviar o recibir información 
+en forma de texto a algún otro usuario de la red.
+
+Cada vez que un host envía un mensaje este llega a su router y es él quién 
+decide cuál será el próximo nodo en la ruta del mensaje. Primeramente el 
+router procede a revisar su lista de host para ver si el usuario al que va 
+dirigido el mensaje es parte de sus conexiones, si el usuario se encuentra 
+en su lista, este envía el mensaje de forma directa a la ip y puerto del 
+host. En caso contrario el router envía consultas a los demás router para 
+ver quien conoce al usuario destino. Una vez que recibe una respuesta 
+positiva  de alguno de los router, entonces hace *forward* del mensaje para 
+que este otro router se encargue de hacerlo llegar a su destino.
+
 
 
 3 Parámetros del Protocolo
 
-3.1 Versión de PCSD
+3.1 Versión de BTP
 
-   PCSD usa un esquema de numeración "<mayor>.<menor>" para indicar las
+   BTP usa un esquema de numeración "<mayor>.<menor>" para indicar las
    versiones del protocolo.  La política de control de versiones de protocolo
    está destinado a permitir al remitente indicar el formato de un mensaje y
-   su capacidad de una mayor comprensión de la comunicación PCSD, en lugar de
+   su capacidad de una mayor comprensión de la comunicación BTP, en lugar de
    las características obtenidas a través de dicha comunicación. No se realizan
    cambios al número de la versión si la adición de componentes del mensaje que
    no afectan el comportamiento de la comunicación o que sólo añaden valores de
@@ -246,15 +175,17 @@ un mensaje por el medio de transmisión hasta otra comarca.
 
    Tenga en cuenta que los números mayores y menores deben ser tratados como
    enteros separados y que cada uno puede incrementarse más que un solo dígito.
-   Por lo tanto, PCSD / 2.4 es una versión inferior a PCSD / 2.13, que a su vez
-   es inferior a PCSD / 12.3. Ceros a la izquierda deberá ser ignorada por los
+   Por lo tanto, BTP / 2.4 es una versión inferior a BTP / 2.13, que a su vez
+   es inferior a BTP / 12.3. Ceros a la izquierda deberá ser ignorada por los
    destinatarios y NO DEBE ser enviado.
 
    Host (endpoints) y Routers deben tener cuidado cuando reenvían mensajes en
    versiones de protocolo diferentes de la de la aplicación. Como la versión
-   indica la capacidad del protocolo del remitente, un Host/Router NO DEBE enviar
-   un mensaje con una versión que es mayor que su versión actual. Si una solicitud
-   con una versión mayor es recibida, el Host/Router debe responder con un error.
+   indica la capacidad del protocolo del remitente, un Host/Router NO DEBE 
+   enviar un mensaje con una versión que es mayor que su versión actual. Si 
+   una solicitud con una versión mayor es recibida, el Host/Router debe 
+   responder con un error.
+
 
 
 4 Message
@@ -266,29 +197,29 @@ un mensaje por el medio de transmisión hasta otra comarca.
   de mantener la red balanceada.
 
   register
-  Este mensaje esta indetificado por el caracter 'r' y se utiliza para registrar
-  a un host en la tabla de indetificadores de un router. Sabiendo que es el mejor
-  router dispinible para hacer el registro.
+  Este mensaje esta indetificado por el caracter 'r' y se utiliza para 
+  registrar a un host en la tabla de indetificadores de un router. Sabiendo 
+  que es el mejorrouter dispinible para hacer el registro.
 
   message
-  Tipo de mensaje identificado por la letra 'm' el cual se utiliza para hacer el
-  envio de un mensaje por la red, ya sea en el router actual o buscar el usuario
-  destinatario sobre todos los routers disponibles de la red. Si el destinatario
-  no existe el mensaje no puede ser entregado y se utiliza un status negativo para
-  notificar.
+  Tipo de mensaje identificado por la letra 'm' el cual se utiliza para hacer 
+  el envio de un mensaje por la red, ya sea en el router actual o buscar el 
+  usuario destinatario sobre todos los routers disponibles de la red. Si el 
+  destinatario no existe el mensaje no puede ser entregado y se utiliza un 
+  status negativo para notificar.
 
   forward
   Este tipo se utiliza para enviar a un usuario que se encuentre en otro router,
-  en caso de que no se encuentre en el router donde se encuentra registrado, este
-  tipo de mensaje es utilizado solamente a nivel de routers. Está identificado por
-  los caracteres 'fw'. Un router debe simplmente enviar el mensaje al usuario
-  destinatario.
+  en caso de que no se encuentre en el router donde se encuentra registrado, 
+  este tipo de mensaje es utilizado solamente a nivel de routers. Está 
+  identificado por los caracteres 'fw'. Un router debe simplmente enviar el 
+  mensaje al usuario destinatario.
 
   query
-  Este mensaje esta identificado por el caracter 'q' y es utilizado solamente a nivel
-  de routers. Un router que recibe este tipo de mensaje debe retornar la cantida
-  de conexiones activas que esta manejando para seleccionar el mejor router para
-  para registrar un nuevo usuario.
+  Este mensaje esta identificado por el caracter 'q' y es utilizado solamente 
+  a nivel de routers. Un router que recibe este tipo de mensaje debe retornar 
+  la cantidad de conexiones activas que esta manejando para seleccionar el mejor 
+  router para para registrar un nuevo usuario.
 
   query user
   Este mensaje se utiliza solamente a nivel de routers y pregunta la existencia
@@ -302,10 +233,10 @@ un mensaje por el medio de transmisión hasta otra comarca.
   mensaje se utiliza para no generar loops infinitos de mensajes sobre la red.
 
   broadcast
-  Esta identificado por el caracter 'b' y el router debe generar un broadcast en la
-  red, para ello manda el mensaje a todos los usuarios registrados en el router y
-  además enviar el mensaje a todos los otros routers activos de la red con el tipo
-  'bl'.
+  Esta identificado por el caracter 'b' y el router debe generar un broadcast en 
+  la red, para ello manda el mensaje a todos los usuarios registrados en el router 
+  y además enviar el mensaje a todos los otros routers activos de la red con el 
+  tipo 'bl'.
 
   register bot
   Identificado por los caracteres 'rb' busca registrar a un bot dentro de la red,
@@ -314,20 +245,28 @@ un mensaje por el medio de transmisión hasta otra comarca.
 
   register bot localy
   Una vez obtenido el indentificador del router con espacio disponible para un bot
-  se debe de registrar la identificacion de IP y puerto del bot en la tabla de hosts
-  en el router. Este mensaje se denota por los caracteres 'rbl'
+  se debe de registrar la identificacion de IP y puerto del bot en la tabla de 
+  hosts en el router. Este mensaje se denota por los caracteres 'rbl'
 
   send to irc bot
-  Si un mensaje debe ser transmitido por medio de un bot irc y el router actual no
-  posee registrado ninguno consulta a los demás routers, una vez encontrado se le
-  envia un mensaje con los caracteres 'sirc' para que envie el mensaje por el irc
-  que se encuentra registrado en su tabla de hosts.
+  Si un mensaje debe ser transmitido por medio de un bot irc y el router actual 
+  no posee registrado ninguno consulta a los demás routers, una vez encontrado se 
+  le envia un mensaje con los caracteres 'sirc' para que envie el mensaje por el 
+  irc que se encuentra registrado en su tabla de hosts.
+
 
 4.2 Message Headers
   
 4.3 Message Body
 
+
 4.4 Message Length
+
+El tamaño máximo de los mensajes será 128 bytes. Aquí se incluye el texto del 
+mensaje, el destinatario, origen, y otros valores que son importantes para los 
+router. Esto aplica tanto para los mensajes enviados a los router, como para 
+las respuestas de estos a los host.
+
 
 
 6 Response
@@ -344,8 +283,6 @@ un mensaje por el medio de transmisión hasta otra comarca.
 8.1 Persistent Connections
 
 8.1.1 Purpose
-
-
 
 8.1.2 Overall Operation
 
@@ -371,25 +308,20 @@ un mensaje por el medio de transmisión hasta otra comarca.
         Field", RFC 2183, August 1997.
 
 
-18 Authors' Addresses
 
-   Roy T. Fielding
-   Information and Computer Science
-   University of California, Irvine
-   Irvine, CA 92697-3425, USA
+18 Autores
 
-   Fax: +1 (949) 824-1715
-   EMail: fielding@ics.uci.edu
+   Daniel Solís Méndez
+   Ciencias de la Computación
+   Costa Rica Institute of Technology, Alajuela
+   Alajuela, Costa Rica
 
-
-   James Gettys
-   World Wide Web Consortium
-   MIT Laboratory for Computer Science
-   545 Technology Square
-   Cambridge, MA 02139, USA
-
-   Fax: +1 (617) 258 8682
-   EMail: jg@w3.org
+   EMail: daniel.soliscr@gmail.com
 
 
-21.  Full Copyright Statement
+   Melvin Elizondo Pérez
+   Ciencias de la Computación
+   Costa Rica Institute of Technology, Alajuela
+   Alajuela, Costa Rica
+
+   EMail: melvin.aep@gmail.com

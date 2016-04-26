@@ -1,12 +1,24 @@
+# coding=utf-8
+"""
+Instituto Tecnológico de Costa Rica
+Ingeniería en Computación
+Redes de Computadoras
+Profesor: Kevin Moraga
+Estudiantes:
+    Daniel Solís Méndez
+    Melvin Elizondo Pérez
+I Semestre 2016
+"""
+
+import json
 from twisted.internet.protocol import Protocol
 from model.socketClient import SocketClient
-import json
-
 from routerLinker import RouterLinker
 
 
 class RouterConnection(Protocol):
-    """ This class handles every new connection to the router.
+    """
+    This class handles every new connection to the router.
 
     On every connection the Factory will create an object of
     this class to handle the connection.
@@ -182,7 +194,6 @@ class RouterConnection(Protocol):
             self._broadcast(data)
             msg, status = self.linker.send_to_irc(data)
             self._write(msg, status)
-
 
         elif "#itsATrap" in hashtags:
             self._broadcast(data)
