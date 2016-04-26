@@ -125,7 +125,7 @@ class RouterLinker:
             response = self.user_on_network("ircbot")
             if response:
                 sc = SocketClient(self.response["ip"], self.response["port"], 1)
-                data["type"] = 'firc'
+                data["type"] = 'sirc'
                 response = json.loads(sc.send(data))
                 print response
                 return {"msg": "Message Delivered"}, 1

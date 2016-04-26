@@ -82,7 +82,7 @@ class RouterConnection(Protocol):
             self._write(response, status)
         elif data["type"] == "rbl":
             self.register_bot(data)
-        elif data["type"] == "firc":
+        elif data["type"] == "sirc":
             data["to"] = "ircbot"
             self._send_to(data)
         else:

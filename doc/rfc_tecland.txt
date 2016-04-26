@@ -25,35 +25,35 @@ Category: Standards Track                                   Compaq/W3C
 
 Abstract
 
-   The PCSD is a message transfer protocol for networks. This looks forward 
-   for an easy sending with few devices to traverse from origin to 
+   The PCSD is a message transfer protocol for networks. This looks forward
+   for an easy sending with few devices to traverse from origin to
    destination. The protocol arises as part of a project of the Costa Rica
    Institute of Technology with educational purpuses. It is a generic, stateless
    protocol which can be modified and used for other tasks beyond its use for
    message (chat). A feature if PCSD is its charge balancing method to assign
    hosts to the less charged routers.
 
-   This specification defines the protocol referred to as "PCSD/1.0" and 
+   This specification defines the protocol referred to as "PCSD/1.0" and
    next updates will be reflected in this document.
 
 
 1 Introducción
 
 1.1 Purpose
-PCSD es un protocolo para el traspaso de mensajes en una red. Este busca que 
+PCSD es un protocolo para el traspaso de mensajes en una red. Este busca que
 el envío sea lo más sencillo posible y que no tenga que atravesar demasiados
-dispositivos para llegar desde su origen hasta su destino. PCSD surge como 
-parte de un proyecto del Instituto Tecnológico de Costa Rica con propósitos 
-educativos. Para su primer versión, es un simple protocolo para transferencia 
+dispositivos para llegar desde su origen hasta su destino. PCSD surge como
+parte de un proyecto del Instituto Tecnológico de Costa Rica con propósitos
+educativos. Para su primer versión, es un simple protocolo para transferencia
 de mensajes de texto plano para comunicación entre dos puntos (tipo chat).
-La jerarquía por la que se rige el protocolo consiste en puntos de conexión 
-para los *endpoints* llamados *routers* cuya función es determinar hacia donde 
-se dirige el mensaje y enviarlo para que este puede llegar a su destino. Los 
-routers son los dispositivos que se encargan de registrar endpoints, enviar 
+La jerarquía por la que se rige el protocolo consiste en puntos de conexión
+para los *endpoints* llamados *routers* cuya función es determinar hacia donde
+se dirige el mensaje y enviarlo para que este puede llegar a su destino. Los
+routers son los dispositivos que se encargan de registrar endpoints, enviar
 mensajes a un endpoint específico, hacer broadcast de un mensaje, entre otros.
-Dentro de la red existen también algunos dispositivos llamados *bots* que 
-realizan diversas funciones como lo son la publicación de un mensaje en un 
-canal de un servidor IRC público o en un servidor NNTP, o bien, el envío de 
+Dentro de la red existen también algunos dispositivos llamados *bots* que
+realizan diversas funciones como lo son la publicación de un mensaje en un
+canal de un servidor IRC público o en un servidor NNTP, o bien, el envío de
 un mensaje por el medio de transmisión hasta otra comarca.
 
 1.2 Requerimientos
@@ -65,13 +65,12 @@ un mensaje por el medio de transmisión hasta otra comarca.
    played by participants in, and objects of, the HTTP communication.
 
    connection
-      A transport layer virtual circuit established between two programs
-      for the purpose of communication.
+      Capa de transporte establecida como los sockets abiertos y disponibles
+      para la lectura y escritura de mensajes. (FID file descriptor)
 
    message
-      The basic unit of HTTP communication, consisting of a structured
-      sequence of octets matching the syntax defined in section 4 and
-      transmitted via the connection.
+      Unidad básica de la comunicación definida como una cadena de caracteres
+      (string) que se escribe por medio de la conexión.
 
    request
       An HTTP request message, as defined in section 5.
@@ -80,10 +79,8 @@ un mensaje por el medio de transmisión hasta otra comarca.
       An HTTP response message, as defined in section 6.
 
    resource
-      A network data object or service that can be identified by a URI,
-      as defined in section 3.2. Resources may be available in multiple
-      representations (e.g. multiple languages, data formats, size, and
-      resolutions) or vary in other ways.
+      Un host de la red identificado por una IP y un número de puerto
+      por el cual se realiza la conexión entre los otros host de la red.
 
    entity
       The information transferred as the payload of a request or
@@ -110,12 +107,12 @@ un mensaje por el medio de transmisión hasta otra comarca.
       negotiation.
 
    client
-      A program that establishes connections for the purpose of sending
-      requests.
+      Un programa que utiliza un router para registrar su identición con el
+      proposito de enviar y recibir paquetes por medio de él.
 
    user agent
-      The client which initiates a request. These are often browsers,
-      editors, spiders (web-traversing robots), or other end user tools.
+      La consola o programa que pueda ejecutar un cliente para el envio y
+      recepción de mensajes.
 
    server
       An application program that accepts connections in order to
@@ -225,7 +222,7 @@ un mensaje por el medio de transmisión hasta otra comarca.
    inbound/outbound
       Inbound and outbound refer to the request and response paths for
       messages: "inbound" means "traveling toward the origin server",
-      and "outbound" means "traveling toward the user agent"      
+      and "outbound" means "traveling toward the user agent"
 
 1.4 Operación General
 
@@ -234,38 +231,100 @@ un mensaje por el medio de transmisión hasta otra comarca.
 
 3.1 Versión de PCSD
 
-   PCSD usa un esquema de numeración "<mayor>.<menor>" para indicar las 
-   versiones del protocolo.  La política de control de versiones de protocolo 
-   está destinado a permitir al remitente indicar el formato de un mensaje y 
-   su capacidad de una mayor comprensión de la comunicación PCSD, en lugar de 
-   las características obtenidas a través de dicha comunicación. No se realizan 
-   cambios al número de la versión si la adición de componentes del mensaje que 
-   no afectan el comportamiento de la comunicación o que sólo añaden valores de 
-   campo extras. El número <menor> se incrementa cuando los cambios realizados 
-   en el protocolo añaden características que no cambian la forma de enviar 
+   PCSD usa un esquema de numeración "<mayor>.<menor>" para indicar las
+   versiones del protocolo.  La política de control de versiones de protocolo
+   está destinado a permitir al remitente indicar el formato de un mensaje y
+   su capacidad de una mayor comprensión de la comunicación PCSD, en lugar de
+   las características obtenidas a través de dicha comunicación. No se realizan
+   cambios al número de la versión si la adición de componentes del mensaje que
+   no afectan el comportamiento de la comunicación o que sólo añaden valores de
+   campo extras. El número <menor> se incrementa cuando los cambios realizados
+   en el protocolo añaden características que no cambian la forma de enviar
    mensajes, pero que pueden añadir semántica a los mensajes e implican
-   capacidades adicionales del receptor. El número <mayor> es aumentado cuando 
-   el formato de un mensaje en el protocolo es cambiado. 
+   capacidades adicionales del receptor. El número <mayor> es aumentado cuando
+   el formato de un mensaje en el protocolo es cambiado.
 
-   Tenga en cuenta que los números mayores y menores deben ser tratados como 
+   Tenga en cuenta que los números mayores y menores deben ser tratados como
    enteros separados y que cada uno puede incrementarse más que un solo dígito.
-   Por lo tanto, PCSD / 2.4 es una versión inferior a PCSD / 2.13, que a su vez 
-   es inferior a PCSD / 12.3. Ceros a la izquierda deberá ser ignorada por los 
+   Por lo tanto, PCSD / 2.4 es una versión inferior a PCSD / 2.13, que a su vez
+   es inferior a PCSD / 12.3. Ceros a la izquierda deberá ser ignorada por los
    destinatarios y NO DEBE ser enviado.
 
-   Host (endpoints) y Routers deben tener cuidado cuando reenvían mensajes en 
-   versiones de protocolo diferentes de la de la aplicación. Como la versión 
-   indica la capacidad del protocolo del remitente, un Host/Router NO DEBE enviar 
-   un mensaje con una versión que es mayor que su versión actual. Si una solicitud 
+   Host (endpoints) y Routers deben tener cuidado cuando reenvían mensajes en
+   versiones de protocolo diferentes de la de la aplicación. Como la versión
+   indica la capacidad del protocolo del remitente, un Host/Router NO DEBE enviar
+   un mensaje con una versión que es mayor que su versión actual. Si una solicitud
    con una versión mayor es recibida, el Host/Router debe responder con un error.
 
 
-4 HTTP Message
+4 Message
 
 4.1 Message Types
+  new message
+  Este mensaje esta identificado por el caracter 'n' y se utiliza para buscar
+  el router con menos host en la red para registrar a un cliente con el fin
+  de mantener la red balanceada.
+
+  register
+  Este mensaje esta indetificado por el caracter 'r' y se utiliza para registrar
+  a un host en la tabla de indetificadores de un router. Sabiendo que es el mejor
+  router dispinible para hacer el registro.
+
+  message
+  Tipo de mensaje identificado por la letra 'm' el cual se utiliza para hacer el
+  envio de un mensaje por la red, ya sea en el router actual o buscar el usuario
+  destinatario sobre todos los routers disponibles de la red. Si el destinatario
+  no existe el mensaje no puede ser entregado y se utiliza un status negativo para
+  notificar.
+
+  forward
+  Este tipo se utiliza para enviar a un usuario que se encuentre en otro router,
+  en caso de que no se encuentre en el router donde se encuentra registrado, este
+  tipo de mensaje es utilizado solamente a nivel de routers. Está identificado por
+  los caracteres 'fw'. Un router debe simplmente enviar el mensaje al usuario
+  destinatario.
+
+  query
+  Este mensaje esta identificado por el caracter 'q' y es utilizado solamente a nivel
+  de routers. Un router que recibe este tipo de mensaje debe retornar la cantida
+  de conexiones activas que esta manejando para seleccionar el mejor router para
+  para registrar un nuevo usuario.
+
+  query user
+  Este mensaje se utiliza solamente a nivel de routers y pregunta la existencia
+  de un usuario especifico en la red, de tenerlo el router responde con 'True'
+  y así se puede hacer un 'fw' al router correspondiente. Este mensaje se denota
+  con los caracteres 'qu'.
+
+  broadcast local
+  Se denota con los caracteres 'bl' y solamente se utiliza a nivel de routers, se
+  debe de enviar el mensaje a todos los usuarios registrados en el router. Este
+  mensaje se utiliza para no generar loops infinitos de mensajes sobre la red.
+
+  broadcast
+  Esta identificado por el caracter 'b' y el router debe generar un broadcast en la
+  red, para ello manda el mensaje a todos los usuarios registrados en el router y
+  además enviar el mensaje a todos los otros routers activos de la red con el tipo
+  'bl'.
+
+  register bot
+  Identificado por los caracteres 'rb' busca registrar a un bot dentro de la red,
+  el router se encarga de proveer un router con espacio disponible para un bot, de
+  no haber ningun router sin bot registrado se notifica con status negativo.
+
+  register bot localy
+  Una vez obtenido el indentificador del router con espacio disponible para un bot
+  se debe de registrar la identificacion de IP y puerto del bot en la tabla de hosts
+  en el router. Este mensaje se denota por los caracteres 'rbl'
+
+  send to irc bot
+  Si un mensaje debe ser transmitido por medio de un bot irc y el router actual no
+  posee registrado ninguno consulta a los demás routers, una vez encontrado se le
+  envia un mensaje con los caracteres 'sirc' para que envie el mensaje por el irc
+  que se encuentra registrado en su tabla de hosts.
 
 4.2 Message Headers
-
+  
 4.3 Message Body
 
 4.4 Message Length
@@ -334,4 +393,3 @@ un mensaje por el medio de transmisión hasta otra comarca.
 
 
 21.  Full Copyright Statement
-
