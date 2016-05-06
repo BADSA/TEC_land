@@ -4,21 +4,21 @@ El proyecto consiste en realizar una reimplementación de algunas de las funcion
 envío de mensajes a través de la red y definiendo un RFC para el mismo.
 
 ### Capa 1: Medio Físico
-En el proyecto el medio físico por utilizar es la luz. Para su transmisión de hará uso de una Raspberry Pi, un LED, un receptor de luz, un capacitor, entre otros.
+En el proyecto el medio físico por utilizar es la luz. Para su transmisión se hará uso de una Raspberry Pi, un LED, un receptor de luz, un capacitor, entre otros.
 El objetivo es convertir los paquetes en presencia o ausencia de luz, e interpretar estas señales en el otro extremo pudiendo reconstruir el paquete y darle el sentido
-con el que se envío.
+binario que se envió para luego obtener los caracteres que estos números binarios representan.
 
 ### Capa 2 y 3: TEC-land
 Consiste en una red que funciona sobre TCP/IP mediante la cual se realiza el envío de mensajes de texto de un nodo a otro. 
-Los diferentes nodos centrales se encargan de realizar el ruteo de los paquetes a través de los distintos dispositivos que se encuentran asociados
+Los diferentes nodos centrales se encargan de realizar el ruteo de los paquetes a través de los distintos dispositivos que se encuentran asociados. De esta manera se pueden usar nombres de usuario que representen Host de la red, para enviar y recibir mensajes.
 
 ### Capa 4: Aplicación
 El propósito de TEC-land es ser una red de chat que permita la comunicación entre personas en distintas localizaciones. Esto se da a nivel
-interno de la red, permitiendo que las comunicaciones sean privadas. Existe también la opción de enviar mensajes que salgan a la "clearnet" y sean
+interno de la red, permitiendo que las comunicaciones sean privadas. Existe también la opción de enviar mensajes que salgan al "clearnet" y sean
 accesibles por todo el público, como también se pueden mandar "broadcast" a lo interno de la red.
 
 Además en esta capa se debe realizar la instalación de un servidor IRC, para que los mensajes catalogados como públicos pueden ser vistos por las personas.
-Asimismo se debe brindar la posibilidad de publicar entradas en un servidor de nntp.
+Asimismo se debe brindar la posibilidad de publicar entradas en un servidor de noticias NNTP.
 
 # Ambiente de desarrollo
 
@@ -55,30 +55,39 @@ PyCharm: es un entorno de desarrollo integrado (IDE) que se utiliza para la prog
 
 ```HostManager::get_users()```: devuelve una lista con los usuarios pertenecientes a un router.
 
-```RouterConnection::connectionMade()```: método que maneja el evento de una nueva conexión de un host. Su responsabilidad es realizar el registro del usuario/host.
-
 ```RouterConnection::dataReceived(data)```: este es una de las funciones más importantes de RouterConnection ya que aquí es donde se reciben los datos desde los clientes y se decide que hacer con ellos.
 
 ```RouterConnection::parse_data(data)```: método que asigna una función como respuesta a cada uno de los tipos de solicitud.
 
-```RouterConnection::```
+```RouterConnection::send_message(data)```: función que se encarga de enviar un mensaje que viene desde un Host y va hacia otro Host, por medio de un nombre de usuario. Se determina si el router esta dentro de las conexiones del router que esta procesando la solicitud, si es así se envía de forma directa el mensaje hacia el Host. De lo contrario el Router pregunta a los demás Router si alguien tiene al usuario en sus conexiones, si alguno tiene la conexion se hace forward hacia ese Router, en otro caso no existe el usuario en la red y se notifica al Host emisor.
 
+```RouterConnection::register_user(data)```: el Router se encarga de registrar un usuario en la red. Primero se encarga de verificar si el nombre de usuario esta tomado y indica al Host que debe eligir otro nombre. Si el nombre esta disponible entonces responde de forma positiva al Host.        
+
+```RouterConnection::is_local_user(data)```: verifica si el usuario dado existe en el archivo de conexiones del Router que esta procesando la solicitud. Esto se utiliza para saber si es una conexión directa o si pertenece a otro Router.
+
+```IRCClient::send(msg)```: envía un mensaje que contiene el hashtag "public" al servidor IRC para que este sea visible por cualquier persona.
+
+```SocketClient::send(data)```: se encarga de envíar un mensaje de manera genérica y esperar por una respuesta del Router.
 
 
 # Instrucciones para ejecutar el programa
 
-Para correr TEC-land se tienen 2 archivos principales:
+Para correr TEC-land se tienen 2 archivos principales y los archivos correspondientes a los bot:
 
 host/main.py: se encarga de correr la aplicación host en un nodo. Este tiene como funciones principales la recepción y el envío de mensajes a través de la red.
 
 router/router.py: archivo principal de los nodos centrales, también llamados routers, que permite a estos ponerse disponibles y empezar a funcionar como punto de enlace para los siguientes host que se integren a la red. Este es el que se encarga de realizar todas las operaciones de ruteo en la red.
 
+irc/main.py: cliente IRC que se conecta a algún router que aún no contenga un bot, y se queda activo esperando por mensajes que deban ser publicados en el servidor IRC (UnrealIRC en este caso).
+
+nntp/main.py: cliente NNTP que de igual forma busca un router que no contenga bots para establecer su conexión y quedar a disposición de la red para cuando un mensaje deba publicarse en el servidor NNTP.
+
 Ambas aplicaciones deben ser un cliente y un servidor al mismo tiempo y para ejecutarlas simplemente se ejecuta el comando:
 
-``` $ python2 main.py``` o ```$ python2 router.py```
+``` $ python2 host/main.py```, ```$ python2 router/router.py```
+``` $ python2 irc/main.py```, ```$ python2 nntp/main.py```
 
 Y se digita la información requerida para su inicio.
-
 
 
 # Actividades realizadas por el estudiante
@@ -146,10 +155,24 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 #### Domingo 24 de abril
 Trabajo en RFC basado en el de HTTP/1.1
 
+#### Lunes 25 de abril
+Refactorizacion del código de Host
+Comentarios en el código
+2 horas
+
+#### Martes 26 de abril
+Trabajos en el RFC, casi finalizado.
+Comentarios en clases varias del código.
+
 
 
 # Comentarios finales
-Indicar el estado final en que qued ́o el programa, problemas encontrados y limitaciones adicionales.
+
+El estado final del proyecto es satisfactorio ya que la mayor parte de las funciones se pudieron implementar de manera correcta. El envío de mensajes a traves de la red se puede realizar sin ningún problema siempre y cuando el usuario destino exista dentro de TEC-land. El broadcast es funcional y permite que un mensaje sea enviado a todos los nodos conectados a la red. Los clientes IRC y NNTP funcionan de manera correcta y ejecutan su labor cada vez que reciben un mensaje. El cliente IRC se conecta correctamente con el servidor UnrealIRC y es capaz de publicar los mensajes en un canal para que puedan ser accedidos publicamente. Sin embargo se tuvieron problemas con la parte del servidor para NNTP por lo que esta conexión entre el cliente y el servidor no se pudo concretar en el proyecto.
+
+Por el lado del medio de transmisión se experimentaron una serie de factores limitantes debido a la naturaleza de esta parte del proyecto, que es en cierto modo ajena a nuestra área de expertiz. Se tuvieron muchas pruebas para poder obtener resultados, no obstante estos no son buenos en todos los casos ya que la forma en que la fotoresistencia interpreta la luz y la oscuridad tiende a ser un poco difusa y no se puede determinar a ciencia cierta cuando es una y cuando es la otra. Por esto algunas de las pruebas al pasar un mensaje fallaron porque en algunos casos los rangos usados para distinguir un 0 de un 1 variaban haciendo que se malinterpretada y con ello afectando totalmente al mensaje final.
+
+
 
 
 
