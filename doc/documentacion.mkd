@@ -151,6 +151,37 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 | Modificación de la clase RouterConnection para realizar broadcast de un mensaje a la red (se modificaron algunos parámetros). | 30 min |
 | Documentación parcial de código.                                                                                              | 1 hora |
 
+#### Jueves 19 abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Actualización de la documentación                                                                                             | 30 min |
+
+#### Domingo 22 de abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Trabajo en RFC basado en el de HTTP/1.1                                                                                       | 1 hora |
+| Agregación de términos y tipos de mensajes.                                                                                  | 1 hora |
+
+
+Miercoles 25 de abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Investigación de los servidores IRC para implementralo junto con el cliente                                                   | 1 hora |
+| Investigación de los clientes IRC de Twisted                                                                                  | 30 min |
+| Codificación del cliente de iRC con biblioteca de Twisted                                                                     | 1 hora |
+| Cambiando el código en las diferentes clases y archivos para revisar si el status de las respuestas es negativo y mostrar el mensaje de error. | 2horas |
+| Creando nueva clase para separar las conexiones del router.  Clase Linker.                                                     | 2 horas |
+| Agregando contenido al RFC en la sección de terminología                                                                      | 2 horas |
+| Cambio en el identificador de los mensajes de IRC                                                                             | 5 min |
+
+
+Jueves 26 de abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Agregando comentarios a las clases                                                                                            | 30 min |
+| Agregando terminología y en la sección de operación general                                                                   | 1 hora |
+
+
 
 #### Domingo 24 de abril
 Trabajo en RFC basado en el de HTTP/1.1
@@ -171,9 +202,6 @@ Comentarios en clases varias del código.
 El estado final del proyecto es satisfactorio ya que la mayor parte de las funciones se pudieron implementar de manera correcta. El envío de mensajes a traves de la red se puede realizar sin ningún problema siempre y cuando el usuario destino exista dentro de TEC-land. El broadcast es funcional y permite que un mensaje sea enviado a todos los nodos conectados a la red. Los clientes IRC y NNTP funcionan de manera correcta y ejecutan su labor cada vez que reciben un mensaje. El cliente IRC se conecta correctamente con el servidor UnrealIRC y es capaz de publicar los mensajes en un canal para que puedan ser accedidos publicamente. Sin embargo se tuvieron problemas con la parte del servidor para NNTP por lo que esta conexión entre el cliente y el servidor no se pudo concretar en el proyecto.
 
 Por el lado del medio de transmisión se experimentaron una serie de factores limitantes debido a la naturaleza de esta parte del proyecto, que es en cierto modo ajena a nuestra área de expertiz. Se tuvieron muchas pruebas para poder obtener resultados, no obstante estos no son buenos en todos los casos ya que la forma en que la fotoresistencia interpreta la luz y la oscuridad tiende a ser un poco difusa y no se puede determinar a ciencia cierta cuando es una y cuando es la otra. Por esto algunas de las pruebas al pasar un mensaje fallaron porque en algunos casos los rangos usados para distinguir un 0 de un 1 variaban haciendo que se malinterpretada y con ello afectando totalmente al mensaje final.
-
-
-
 
 
 # Conclusiones
