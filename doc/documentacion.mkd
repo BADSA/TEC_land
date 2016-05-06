@@ -144,8 +144,33 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 
 
 #### Domingo 24 de abril
-Trabajo en RFC basado en el de HTTP/1.1
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Trabajo en RFC basado en el de HTTP/1.1                                                                                       | 1 hora |
+| Agregacion de terminos y tipos de mensajes.                                                                                  | 1 hora |
 
+
+19-04-2016
+Actualizacion de la documentacion | 30 min
+
+25-04-2016
+Investigacion de los servidores IRC para implementralo junto con el cliente | 1 hora
+
+Investigacion de los clientes IRC de Twisted | 30 min
+
+Codificacion del cliente de iRC con biblioteca de Twisted | 1 hora
+Cambiando el codigo en las diferentes clases y archivos para revisar si el status de las respuestas es negativo y mostrar el mensaje de error. | 2horas
+
+Creando nueva clase para separar las conexiones del router.  Clase Linker | 2 horas
+
+Agregando contenido al RFC en la seccion de terminologia | 2 horas
+
+Cambio en el identificador de los mensajes de IRC
+
+
+26-04-2016
+Agregando comentarios a las clases | 30 min
+Agregando terminologia y en la seccion de operacion general | 1 hora
 
 
 # Comentarios finales
