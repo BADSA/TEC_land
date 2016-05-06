@@ -142,35 +142,35 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 | Modificación de la clase RouterConnection para realizar broadcast de un mensaje a la red (se modificaron algunos parámetros). | 30 min |
 | Documentación parcial de código.                                                                                              | 1 hora |
 
+#### Jueves 19 abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Actualización de la documentación                                                                                             | 30 min |
 
-#### Domingo 24 de abril
+#### Domingo 22 de abril
 |                                                           Actividad                                                           | Tiempo |
 |:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
 | Trabajo en RFC basado en el de HTTP/1.1                                                                                       | 1 hora |
-| Agregacion de terminos y tipos de mensajes.                                                                                  | 1 hora |
+| Agregación de términos y tipos de mensajes.                                                                                  | 1 hora |
 
 
-19-04-2016
-Actualizacion de la documentacion | 30 min
-
-25-04-2016
-Investigacion de los servidores IRC para implementralo junto con el cliente | 1 hora
-
-Investigacion de los clientes IRC de Twisted | 30 min
-
-Codificacion del cliente de iRC con biblioteca de Twisted | 1 hora
-Cambiando el codigo en las diferentes clases y archivos para revisar si el status de las respuestas es negativo y mostrar el mensaje de error. | 2horas
-
-Creando nueva clase para separar las conexiones del router.  Clase Linker | 2 horas
-
-Agregando contenido al RFC en la seccion de terminologia | 2 horas
-
-Cambio en el identificador de los mensajes de IRC
+Miercoles 25 de abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Investigación de los servidores IRC para implementralo junto con el cliente                                                   | 1 hora |
+| Investigación de los clientes IRC de Twisted                                                                                  | 30 min |
+| Codificación del cliente de iRC con biblioteca de Twisted                                                                     | 1 hora |
+| Cambiando el código en las diferentes clases y archivos para revisar si el status de las respuestas es negativo y mostrar el mensaje de error. | 2horas |
+| Creando nueva clase para separar las conexiones del router.  Clase Linker.                                                     | 2 horas |
+| Agregando contenido al RFC en la sección de terminología                                                                      | 2 horas |
+| Cambio en el identificador de los mensajes de IRC                                                                             | 5 min |
 
 
-26-04-2016
-Agregando comentarios a las clases | 30 min
-Agregando terminologia y en la seccion de operacion general | 1 hora
+Jueves 26 de abril
+|                                                           Actividad                                                           | Tiempo |
+|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+| Agregando comentarios a las clases                                                                                            | 30 min |
+| Agregando terminología y en la sección de operación general                                                                   | 1 hora |
 
 
 # Comentarios finales
