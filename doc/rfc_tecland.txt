@@ -4,7 +4,7 @@
 
 
 
-BADSA Group                                               Daniel Solís    
+BADSA Group                                               Daniel Solís
 Request for Comments: 9999                                        ITCR
                                                        Melvin Elizondo
                                                                   ITCR
@@ -15,16 +15,16 @@ Request for Comments: 9999                                        ITCR
 
 Abstract
 
-   The BTP is a message transfer protocol for networks. This looks 
-   forward for an easy sending with few devices to traverse from origin 
-   to destination. The protocol arises as part of a project of the 
-   Costa Rica Institute of Technology with educational purpuses. It is 
-   a generic, stateless protocol which can be modified and used for 
-   other  tasks beyond its use for message (chat). A feature if BTP is 
-   its charge balancing method to assign hosts to the less charged 
+   The BTP is a message transfer protocol for networks. This looks
+   forward for an easy sending with few devices to traverse from origin
+   to destination. The protocol arises as part of a project of the
+   Costa Rica Institute of Technology with educational purpuses. It is
+   a generic, stateless protocol which can be modified and used for
+   other  tasks beyond its use for message (chat). A feature if BTP is
+   its charge balancing method to assign hosts to the less charged
    routers.
 
-   This specification defines the protocol referred to as "BTP/1.0" 
+   This specification defines the protocol referred to as "BTP/1.0"
    and next updates will be reflected in this document.
 
 
@@ -32,21 +32,21 @@ Abstract
 
 1.1 Purpose
 
-BTP es un protocolo para el traspaso de mensajes en una red. Este busca 
-que el envío sea lo más sencillo posible y que no tenga que atravesar 
-demasiados dispositivos para llegar desde su origen hasta su destino. BTP 
-surge como parte de un proyecto del Instituto Tecnológico de Costa Rica 
-con propósitos educativos. Para su primer versión, es un simple protocolo 
-para transferencia de mensajes de texto plano para comunicación entre dos 
-puntos (tipo chat). La jerarquía por la que se rige el protocolo consiste 
-en puntos de conexión para los *endpoints* llamados *routers* cuya función 
-es determinar hacia donde se dirige el mensaje y enviarlo para que este 
-puede llegar a su destino. Los routers son los dispositivos que se encargan 
-de registrar endpoints, enviar mensajes a un endpoint específico, hacer 
-broadcast de un mensaje, entre otros. Dentro de la red existen también 
-algunos dispositivos llamados *bots* que realizan diversas funciones como 
-lo son la publicación de un mensaje en un canal de un servidor IRC público 
-o en un servidor NNTP, o bien, el envío de un mensaje por el medio de 
+BTP es un protocolo para el traspaso de mensajes en una red. Este busca
+que el envío sea lo más sencillo posible y que no tenga que atravesar
+demasiados dispositivos para llegar desde su origen hasta su destino. BTP
+surge como parte de un proyecto del Instituto Tecnológico de Costa Rica
+con propósitos educativos. Para su primer versión, es un simple protocolo
+para transferencia de mensajes de texto plano para comunicación entre dos
+puntos (tipo chat). La jerarquía por la que se rige el protocolo consiste
+en puntos de conexión para los *endpoints* llamados *routers* cuya función
+es determinar hacia donde se dirige el mensaje y enviarlo para que este
+puede llegar a su destino. Los routers son los dispositivos que se encargan
+de registrar endpoints, enviar mensajes a un endpoint específico, hacer
+broadcast de un mensaje, entre otros. Dentro de la red existen también
+algunos dispositivos llamados *bots* que realizan diversas funciones como
+lo son la publicación de un mensaje en un canal de un servidor IRC público
+o en un servidor NNTP, o bien, el envío de un mensaje por el medio de
 transmisión hasta otra comarca.
 
 1.2 Requerimientos
@@ -54,57 +54,57 @@ transmisión hasta otra comarca.
 
 1.3 Terminología
 
-   Esta especificación usa varios términos para referirse a los roles que 
-   ejercen los dispositivos en la red y los distintos objetos que 
+   Esta especificación usa varios términos para referirse a los roles que
+   ejercen los dispositivos en la red y los distintos objetos que
    intervienen en la comunicación.
 
    bot
-      Concepto usado para referirse a un programa informático que imita 
-      el comportamiento humano. En el caso del protocolo existen tres 
-      tipos de bot que son: el encargado de publicar en IRC, en NNTP y 
-      el que controla el medio de transmisión para enviar mensajes a 
+      Concepto usado para referirse a un programa informático que imita
+      el comportamiento humano. En el caso del protocolo existen tres
+      tipos de bot que son: el encargado de publicar en IRC, en NNTP y
+      el que controla el medio de transmisión para enviar mensajes a
       otras comarcas.
 
    router
-      Dispositivo principal de la red que se encarga de enviar los 
-      mensajes  hasta su destino o bien al siguiente router que pueda 
+      Dispositivo principal de la red que se encarga de enviar los
+      mensajes  hasta su destino o bien al siguiente router que pueda
       hacer llegar  el mensaje a el usuario al que va dirigido.
 
    host
       Punto de conexión de los usuarios. Aquí es donde escogen un nombre
-      de usuario que los identifique en la red para poder empezar a enviar 
+      de usuario que los identifique en la red para poder empezar a enviar
       mensajes.
 
    socket
-      Concepto abstracto por el cual dos programas pueden intercambiar 
-      cualquier flujo de datos, generalmente de manera fiable y ordenada. 
+      Concepto abstracto por el cual dos programas pueden intercambiar
+      cualquier flujo de datos, generalmente de manera fiable y ordenada.
       Utilizado de manera regular para intercambios por red.
 
    nntp
-      Protocolo para la transferencia de noticias en red. Es usado por uno 
+      Protocolo para la transferencia de noticias en red. Es usado por uno
       de  los bot para la publicación de mensajes que cumplen con ciertas
       características.
 
    irc
-       Protocolo de comunicación en tiempo real basado en texto. Es 
+       Protocolo de comunicación en tiempo real basado en texto. Es
        ampliamente utilizado por personas de todo el mundo.
 
    raspberry pi
-      Dispositivo utilizado en el medio de tranmisión para la emisión y 
-      recepción de las ondas de luz que son utilizadas para representar los 
+      Dispositivo utilizado en el medio de tranmisión para la emisión y
+      recepción de las ondas de luz que son utilizadas para representar los
       mensajes.
 
    connection/conexión
-      Capa de transporte establecida como los sockets abiertos y 
-      disponibles para la lectura y escritura de mensajes. (FID file 
+      Capa de transporte establecida como los sockets abiertos y
+      disponibles para la lectura y escritura de mensajes. (FID file
       descriptor).
 
    message/mensaje
-      Unidad básica de la comunicación definida como una cadena de 
+      Unidad básica de la comunicación definida como una cadena de
       caracteres (string) que se escribe por medio de la conexión.
 
    response/respuesta
-      Respuesta de los router BTP a los mensajes que fueron enviados por 
+      Respuesta de los router BTP a los mensajes que fueron enviados por
       los hosts.
 
    resource/recurso
@@ -125,33 +125,33 @@ transmisión hasta otra comarca.
 
    server/servidor
       Un programa que acepta conexiones para servir como punto de envío de
-      mensajes. En caso del protocolo tanto los Host como los Router son 
+      mensajes. En caso del protocolo tanto los Host como los Router son
       servidores.
 
 1.4 Operación General
 
-BTP es un protocolo para el envío de mensajes de texto a través de la red 
-que consiste principalmente de dos tipos de dispositivos: host y router. 
-Los host representan los puntos finales de la red donde los usuarios deben 
-escoger un nombre que los represente de manera única, para la recepción y 
-envío de mensajes. Cada vez que un host se quiere incorporar a la red, este 
-debe establecer conexión con alguno de los router bien conocidos que se 
-encuentran en su lista, para enviar una consulta solicitando la información 
-de su punto de conexión. Es entonces cuando los router mantienen un 
-intercambio de información para ver cuál de ellos es el que se encuentra más 
-libre. Una vez obtenidos los datos del router (ip, puerto)  se procede a 
-indicarle al host cual será su punto de conexión. A partir de ese momento el 
-host ya forma parte de la red TEC-land y podrá enviar o recibir información 
+BTP es un protocolo para el envío de mensajes de texto a través de la red
+que consiste principalmente de dos tipos de dispositivos: host y router.
+Los host representan los puntos finales de la red donde los usuarios deben
+escoger un nombre que los represente de manera única, para la recepción y
+envío de mensajes. Cada vez que un host se quiere incorporar a la red, este
+debe establecer conexión con alguno de los router bien conocidos que se
+encuentran en su lista, para enviar una consulta solicitando la información
+de su punto de conexión. Es entonces cuando los router mantienen un
+intercambio de información para ver cuál de ellos es el que se encuentra más
+libre. Una vez obtenidos los datos del router (ip, puerto)  se procede a
+indicarle al host cual será su punto de conexión. A partir de ese momento el
+host ya forma parte de la red TEC-land y podrá enviar o recibir información
 en forma de texto a algún otro usuario de la red.
 
-Cada vez que un host envía un mensaje este llega a su router y es él quién 
-decide cuál será el próximo nodo en la ruta del mensaje. Primeramente el 
-router procede a revisar su lista de host para ver si el usuario al que va 
-dirigido el mensaje es parte de sus conexiones, si el usuario se encuentra 
-en su lista, este envía el mensaje de forma directa a la ip y puerto del 
-host. En caso contrario el router envía consultas a los demás router para 
-ver quien conoce al usuario destino. Una vez que recibe una respuesta 
-positiva  de alguno de los router, entonces hace *forward* del mensaje para 
+Cada vez que un host envía un mensaje este llega a su router y es él quién
+decide cuál será el próximo nodo en la ruta del mensaje. Primeramente el
+router procede a revisar su lista de host para ver si el usuario al que va
+dirigido el mensaje es parte de sus conexiones, si el usuario se encuentra
+en su lista, este envía el mensaje de forma directa a la ip y puerto del
+host. En caso contrario el router envía consultas a los demás router para
+ver quien conoce al usuario destino. Una vez que recibe una respuesta
+positiva  de alguno de los router, entonces hace *forward* del mensaje para
 que este otro router se encargue de hacerlo llegar a su destino.
 
 
@@ -181,9 +181,9 @@ que este otro router se encargue de hacerlo llegar a su destino.
 
    Host (endpoints) y Routers deben tener cuidado cuando reenvían mensajes en
    versiones de protocolo diferentes de la de la aplicación. Como la versión
-   indica la capacidad del protocolo del remitente, un Host/Router NO DEBE 
-   enviar un mensaje con una versión que es mayor que su versión actual. Si 
-   una solicitud con una versión mayor es recibida, el Host/Router debe 
+   indica la capacidad del protocolo del remitente, un Host/Router NO DEBE
+   enviar un mensaje con una versión que es mayor que su versión actual. Si
+   una solicitud con una versión mayor es recibida, el Host/Router debe
    responder con un error.
 
 
@@ -197,28 +197,28 @@ que este otro router se encargue de hacerlo llegar a su destino.
   de mantener la red balanceada.
 
   register
-  Este mensaje esta indetificado por el caracter 'r' y se utiliza para 
-  registrar a un host en la tabla de indetificadores de un router. Sabiendo 
+  Este mensaje esta indetificado por el caracter 'r' y se utiliza para
+  registrar a un host en la tabla de indetificadores de un router. Sabiendo
   que es el mejorrouter dispinible para hacer el registro.
 
   message
-  Tipo de mensaje identificado por la letra 'm' el cual se utiliza para hacer 
-  el envio de un mensaje por la red, ya sea en el router actual o buscar el 
-  usuario destinatario sobre todos los routers disponibles de la red. Si el 
-  destinatario no existe el mensaje no puede ser entregado y se utiliza un 
+  Tipo de mensaje identificado por la letra 'm' el cual se utiliza para hacer
+  el envio de un mensaje por la red, ya sea en el router actual o buscar el
+  usuario destinatario sobre todos los routers disponibles de la red. Si el
+  destinatario no existe el mensaje no puede ser entregado y se utiliza un
   status negativo para notificar.
 
   forward
   Este tipo se utiliza para enviar a un usuario que se encuentre en otro router,
-  en caso de que no se encuentre en el router donde se encuentra registrado, 
-  este tipo de mensaje es utilizado solamente a nivel de routers. Está 
-  identificado por los caracteres 'fw'. Un router debe simplmente enviar el 
+  en caso de que no se encuentre en el router donde se encuentra registrado,
+  este tipo de mensaje es utilizado solamente a nivel de routers. Está
+  identificado por los caracteres 'fw'. Un router debe simplmente enviar el
   mensaje al usuario destinatario.
 
   query
-  Este mensaje esta identificado por el caracter 'q' y es utilizado solamente 
-  a nivel de routers. Un router que recibe este tipo de mensaje debe retornar 
-  la cantidad de conexiones activas que esta manejando para seleccionar el mejor 
+  Este mensaje esta identificado por el caracter 'q' y es utilizado solamente
+  a nivel de routers. Un router que recibe este tipo de mensaje debe retornar
+  la cantidad de conexiones activas que esta manejando para seleccionar el mejor
   router para para registrar un nuevo usuario.
 
   query user
@@ -233,9 +233,9 @@ que este otro router se encargue de hacerlo llegar a su destino.
   mensaje se utiliza para no generar loops infinitos de mensajes sobre la red.
 
   broadcast
-  Esta identificado por el caracter 'b' y el router debe generar un broadcast en 
-  la red, para ello manda el mensaje a todos los usuarios registrados en el router 
-  y además enviar el mensaje a todos los otros routers activos de la red con el 
+  Esta identificado por el caracter 'b' y el router debe generar un broadcast en
+  la red, para ello manda el mensaje a todos los usuarios registrados en el router
+  y además enviar el mensaje a todos los otros routers activos de la red con el
   tipo 'bl'.
 
   register bot
@@ -245,46 +245,79 @@ que este otro router se encargue de hacerlo llegar a su destino.
 
   register bot localy
   Una vez obtenido el indentificador del router con espacio disponible para un bot
-  se debe de registrar la identificacion de IP y puerto del bot en la tabla de 
+  se debe de registrar la identificacion de IP y puerto del bot en la tabla de
   hosts en el router. Este mensaje se denota por los caracteres 'rbl'
 
   send to irc bot
-  Si un mensaje debe ser transmitido por medio de un bot irc y el router actual 
-  no posee registrado ninguno consulta a los demás routers, una vez encontrado se 
-  le envia un mensaje con los caracteres 'sirc' para que envie el mensaje por el 
+  Si un mensaje debe ser transmitido por medio de un bot irc y el router actual
+  no posee registrado ninguno consulta a los demás routers, una vez encontrado se
+  le envia un mensaje con los caracteres 'sirc' para que envie el mensaje por el
   irc que se encuentra registrado en su tabla de hosts.
 
 
-4.2 Message Headers
-  
-4.3 Message Body
+4.2 Cuerpo del mensaje
+  Nueva conexión
+    Este mensaje no contiene cuerpo ya que se utiliza para comunicar con el
+    router y obtener el identificador del router al cual un host particular
+    debe registrarse.
 
+  Nuevo registro
+    El contenido de este mensaje es la información de identificador del host junto
+    con el nombre de usuario que se desea registrar un router.
 
-4.4 Message Length
+  Nuevo mensaje
+    El cuerpo del mensaje es propiamente el mensaje que un usuario desee transmitir
+    por la red.
 
-El tamaño máximo de los mensajes será 128 bytes. Aquí se incluye el texto del 
-mensaje, el destinatario, origen, y otros valores que son importantes para los 
-router. Esto aplica tanto para los mensajes enviados a los router, como para 
-las respuestas de estos a los host.
+4.3 Tamaño del mensaje
+  El tamaño máximo de los mensajes será 128 bytes. Aquí se incluye el texto del
+  mensaje, el destinatario, origen, y otros valores que son importantes para los
+  router. Esto aplica tanto para los mensajes enviados a los router, como para
+  las respuestas de estos a los host.
 
+6 Respuesta
 
+6.1 Propiedad status de la respuesta
+  La propiedad de status corresponde al tipo de código con el que un router responde 
+  al realizar una operación solicitada por un host que se encuentre registrado en la 
+  red. Dicha propiedad tiene únicamente dos posibles valores que corresponden a un 
+  status positivo (1) o un status negativo (-1).
 
-6 Response
+6.1.1 Tipo de status y mensaje de información
+  Status positivo
+    Se identifica con el número 1 y se presenta siempre que la operación realizada
+    fue totalmente exitosa. No ocurrió ningún error en la comunicación ni en el envio
+    de los mensajes. Adicional se agrega un mensaje como respuesta del router notificando
+    que la operación se realizó correctamente.
 
-6.1 Status-Line
+  Status negativo
+    Se identifica por el número -1 y se presenta si durante alguna de las operaciónes
+    necesarias ocurrió un error. El mensaje de error contiene una pequeña descripción
+    de la razón por la cual ocurrió el fallo.
 
+8 Conexiones
 
-6.1.1 Status Code and Reason Phrase
+8.1 Conexión persistente
+  La conexión entre un usuario y el router en el que se encuentra registrado debe
+  persistir tanto como el usuario lo desee. Dicha conexión permite al usuario el
+  envio y recepción de mensajes.
+  En el caso de los routers que conformen la red debe existir al menos una configuración
+  de los routers que permita enviar un mensaje desde un router a otro atravez de los mismos.
+  Dichas conexiones deben persistir mientras los routers se encuentren en ejecución.
 
+8.1.1 Proposito
+  El proposito general de la conexión es la comunicación entre los usuarios de la
+  red. Un usuario puede utilizar dicha conexión para realizar bradcast sobre la red
+  o para comunicarse con un usario específico previamente registrado. Dicha conexión
+  puede utilizarse para publicar en un IRC, NNTP, o salir de TEC_LAN por un dispositivo
+  de transmisión.
 
-
-8 Connections
-
-8.1 Persistent Connections
-
-8.1.1 Purpose
-
-8.1.2 Overall Operation
+8.1.2 Operación general
+  La operación general de una conexión de tipo host-router es enviar un mesaje debidamente
+  identificado por su tipo hacia un router, dicho router se encarga de realizar una operación
+  determinada según el tipo de mensaje recibido. Para las conexiones de tipo router-host el router 
+  se encarga de notificar constantemente el status de las operaciones que un host solicita,
+  cada notificación presenta su correspondiente status y mensaje según la operación realizada.    
 
 
 
@@ -309,7 +342,7 @@ las respuestas de estos a los host.
 
 
 
-18 Autores
+2 Autores
 
    Daniel Solís Méndez
    Ciencias de la Computación
