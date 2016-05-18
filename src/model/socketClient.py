@@ -45,8 +45,6 @@ class SocketClient:
 
         try:
             self.sock.connect(self.con_info)
-            print "TEC-land network online..."
-            print "TEC-land host connecting to {0}:{1}".format(self.ip, self.port)
             return True
         except error:
             return False

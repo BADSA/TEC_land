@@ -52,6 +52,8 @@ class ConnectionFinder:
                 port = int(router["port"])
                 s = SocketClient(ip, port)
                 if s.status():
+                    print "TEC-land network online..."
+                    print "TEC-land host connecting to {0}:{1}".format(ip, port)
                     print "Server {0} is up and running on port {1}".format(router["ip"], router["port"])
                     found = True
                     break

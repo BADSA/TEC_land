@@ -139,7 +139,7 @@ class RouterLinker:
                 sc = SocketClient(self.response["ip"], self.response["port"], 1)
                 data["type"] = 'sirc'
                 response = json.loads(sc.send(data))
-                print response
+                # print response
                 return {"msg": "Message Delivered"}, 1
             else:
                 return {"msg": "IRC Service not available"}, -1
