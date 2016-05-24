@@ -1,3 +1,15 @@
+</br></br></br>
+<center>
+**_Instituto Tecnológico de Costa Rica_  
+_Redes de Computadoras_  
+_Profesor: Kevin Moraga_  
+_Proyecto 1: TEC Land_  
+_Estudiantes:_  
+    _Daniel Solís Méndez_   
+    _Melvin Elizondo Pérez_  
+_I Semestre 2016_  **
+</center>
+</br>
 # Introducción
 
 El proyecto consiste en realizar una reimplementación de algunas de las funciones de varias capas del modelo OSI, generando un protocolo propio para el envío de mensajes a través de la red y definiendo un RFC para el mismo.
@@ -89,7 +101,9 @@ Para el medio de transmisión se deben realizar las conexiones en la Raspberry P
 
 Se necesitará usar uno de los pines GND (ground) para que actue como el extremo negativo de una batería. El extremo positivo de la batería sera proveído por uno de los pines GPIO. En este caso se usará el pin 18, que emitirá 3.3 voltios para hacer que el LED se encienda. El diagrama del circuito se muestra a continuación.
 
+<center>
 ![alt text](img/LED.png "Diagrama de circuito")
+</center>
 
 > Para información más detalladas se puede consultar: [turn LED with Raspberry Pi](https://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins
 
@@ -112,23 +126,24 @@ $ python2 transmission/main.py
 
 Finalmente se digita la información requerida para su inicio/funcionamiento.
 
-
+</br></br>
 # Actividades realizadas por el estudiante
 
-Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t ́erminos del tiempo invertido para una actividad especıfica que impacto directamente el desarrollo del trabajo, de manera breve (no mas de una l ́ınea) se describe lo que se realizo, la cantidad de horas invertidas y la fecha en la que se realizo. Se deben sumar las horas invertidas por cada estudiante, sean conscientes a la hora de realizar esto el profesor determinara si los reportes estan acordes al producto entregado.
-
+<center>
 #### Jueves a viernes 01 de abril
 |                                                      Actividad                                                     |   Tiempo  |
-|:------------------------------------------------------------------------------------------------------------------:|:---------:|
+|:------------------------------------------------------------------------------------------------------------------|---------:|
 | Lectura de la especificación.                                                                                      | 20 min    |
 | Reunión con el profesor para aclarar puntos de la tarea.                                                           | 1 hora    |
 | Investigacion de P2P, APIs para redes mesh en Python, servidores IRC (Unreal IRC) y clientes (XChat IRC), Firechat | 3 horas   |
 | Logramos encender el LED de la Raspberry y convertir caracteres a su binario para transmitirlos por medio de luz.  | 1.5 horas |
 | Instalación de Unrealircd (servidor IRC).                                                                          | 15 min    |
 
+
+
 #### Lunes 11 de abril
 |                                                       Actividad                                                      |   Tiempo  |
-|:--------------------------------------------------------------------------------------------------------------------:|:---------:|
+|:--------------------------------------------------------------------------------------------------------------------|---------:|
 | Creación del repositorio.                                                                                            | 15 min    |
 | Diseñando la red y como conectar nodos.                                                                              | 30 min    |
 | Investigación de Twisted. Lectura de creación de clientes y servidores básicos.                                      | 30 min    |
@@ -138,7 +153,7 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 
 #### Martes 12 de abril
 |                                                                                                  Actividad                                                                                                 |   Tiempo  |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------:|
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
 | Separación de clase Router en dos clases Router y RouterConnection. RouterConnection registra los usuarios.                                                                                                | 1 hora    |
 | Investigación sobre objetos Diferred de Twisted.                                                                                                                                                           | 2 horas   |
 | Pruebas con objetos Diferred.                                                                                                                                                                              | 2 horas   |
@@ -147,7 +162,7 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 
 #### Jueves 14 de abril
 |                                                 Actividad                                                 |  Tiempo |
-|:---------------------------------------------------------------------------------------------------------:|:-------:|
+|:---------------------------------------------------------------------------------------------------------|-------:|
 | Consultar a los router vecinos para realizar el balanceamiento de carga (asignar host al menos cargado).  | 20 min  |
 | Trabajos en la comunicación entre los router.                                                             | 1 hora  |
 | Creación de clase SocketClient para manejar las conexiones cliente/servidor y realizar envío de mensajes. | 30 min  |
@@ -157,9 +172,10 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 | Creación de "thread" para que muestre el chat preguntando a quien va dirigido el mensaje y su contenido.  | 20 min  |
 | Clases ChatClient, HostFactory y su estructura básica.                                                    | 1 hora  |
 
+</br></br>
 #### Viernes 15 de abril
 |                                                                        Actividad                                                                        |   Tiempo  |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|:---------:|
+|:-------------------------------------------------------------------------------------------------------------------------------------------------------|---------:|
 | Modificaciones en la clase HostManager.                                                                                                                 | 30 min    |
 | Verificación de usuarios en toda la red.                                                                                                                | 1.5 horas |
 | Redireccionamiento de mensajes cuando no se encuentra el usuario en la red local.                                                                       | 30 min    |
@@ -170,25 +186,25 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 
 #### Sábado 16 de abril
 |                                                           Actividad                                                           | Tiempo |
-|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+|:-----------------------------------------------------------------------------------------------------------------------------|------:|
 | Modificación de la clase RouterConnection para realizar broadcast de un mensaje a la red (se modificaron algunos parámetros). | 30 min |
 | Documentación parcial de código.                                                                                              | 1 hora |
 
 #### Jueves 19 abril
 |                                                           Actividad                                                           | Tiempo |
-|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+|:-----------------------------------------------------------------------------------------------------------------------------|------:|
 | Actualización de la documentación                                                                                             | 30 min |
 
 #### Domingo 22 de abril
 |                                                           Actividad                                                           | Tiempo |
-|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+|:-----------------------------------------------------------------------------------------------------------------------------|------:|
 | Trabajo en RFC basado en el de HTTP/1.1                                                                                       | 1 hora |
 | Agregación de términos y tipos de mensajes.                                                                                  | 1 hora |
 
 
 #### Miercoles 25 de abril
 |                                                           Actividad                                                           | Tiempo |
-|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+|:-----------------------------------------------------------------------------------------------------------------------------|------:|
 | Investigación de los servidores IRC para implementralo junto con el cliente                                                   | 1 hora |
 | Investigación de los clientes IRC de Twisted                                                                                  | 30 min |
 | Codificación del cliente de iRC con biblioteca de Twisted                                                                     | 1 hora |
@@ -200,17 +216,20 @@ Este es un resumen de las bitacoras de cada estudiante ( estilo timesheet) en t 
 
 #### Jueves 26 de abril
 |                                                           Actividad                                                           | Tiempo |
-|:-----------------------------------------------------------------------------------------------------------------------------:|:------:|
+|:-----------------------------------------------------------------------------------------------------------------------------|------:|
 | Agregando comentarios a las clases                                                                                            | 30 min |
 | Agregando terminología y en la sección de operación general                                                                   | 1 hora |
 
 
 #### Sábado 7 de mayo 
 |                 Actividad                |  Tiempo |
-|:----------------------------------------:|:-------:|
+|:----------------------------------------|-------:|
 | Terminando documentación del proyecto.   | 2 horas |
 | Completando últimas secciones del RFC.   | 2 horas |
 | Comentarios en clases varias del código. | 1 hora  |
+
+
+</center>
 
 # Comentarios finales
 
@@ -240,3 +259,6 @@ Otro de los beneficios obtenidos trás el proyecto fue el conocimiento de nuevos
 # Bibliografía
 
 1. Twisted Network Programming Essentials 2nd Edition
+2. The PiHut. Turning on an LED with your Raspberry Pi's GPIO Pins. June 11, 2015. Disponible en https://thepihut.com/blogs/raspberry-pi-tutorials/27968772-turning-on-an-led-with-your-raspberry-pis-gpio-pins
+3. UnrealIRCd. UnrealIRCd 4 documentation. Disponible en https://www.unrealircd.org/docs/UnrealIRCd_4_documentation.
+
