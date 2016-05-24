@@ -49,6 +49,17 @@ lo son la publicación de un mensaje en un canal de un servidor IRC público
 o en un servidor NNTP, o bien, el envío de un mensaje por el medio de
 transmisión hasta otra comarca.
 
+
+
+
+
+
+
+Daniel Solís, et al.        Seguimiento de Estándar           [Página 1]
+
+RFC 9999                        BTP/1.0                        Mayo 2016
+
+
 1.2 Requerimientos
 
 
@@ -99,6 +110,12 @@ transmisión hasta otra comarca.
       disponibles para la lectura y escritura de mensajes. (FID file
       descriptor).
 
+
+Daniel Solís, et al.        Seguimiento de Estándar           [Página 2]
+
+RFC 9999                        BTP/1.0                        Mayo 2016
+
+
    message/mensaje
       Unidad básica de la comunicación definida como una cadena de
       caracteres (string) que se escribe por medio de la conexión.
@@ -143,6 +160,14 @@ libre. Una vez obtenidos los datos del router (ip, puerto)  se procede a
 indicarle al host cual será su punto de conexión. A partir de ese momento el
 host ya forma parte de la red TEC-land y podrá enviar o recibir información
 en forma de texto a algún otro usuario de la red.
+
+
+
+
+Daniel Solís, et al.        Seguimiento de Estándar           [Página 3]
+
+RFC 9999                        BTP/1.0                        Mayo 2016
+
 
 Cada vez que un host envía un mensaje este llega a su router y es él quién
 decide cuál será el próximo nodo en la ruta del mensaje. Primeramente el
@@ -196,6 +221,11 @@ que este otro router se encargue de hacerlo llegar a su destino.
   el router con menos host en la red para registrar a un cliente con el fin
   de mantener la red balanceada.
 
+
+Daniel Solís, et al.        Seguimiento de Estándar           [Página 4]
+
+RFC 9999                        BTP/1.0                        Mayo 2016
+
   register
   Este mensaje esta indetificado por el caracter 'r' y se utiliza para
   registrar a un host en la tabla de indetificadores de un router. Sabiendo
@@ -248,6 +278,11 @@ que este otro router se encargue de hacerlo llegar a su destino.
   se debe de registrar la identificacion de IP y puerto del bot en la tabla de
   hosts en el router. Este mensaje se denota por los caracteres 'rbl'
 
+
+Daniel Solís, et al.        Seguimiento de Estándar           [Página 5]
+
+RFC 9999                        BTP/1.0                        Mayo 2016
+
   send to irc bot
   Si un mensaje debe ser transmitido por medio de un bot irc y el router actual
   no posee registrado ninguno consulta a los demás routers, una vez encontrado se
@@ -295,6 +330,14 @@ que este otro router se encargue de hacerlo llegar a su destino.
     necesarias ocurrió un error. El mensaje de error contiene una pequeña descripción
     de la razón por la cual ocurrió el fallo.
 
+
+
+
+Daniel Solís, et al.        Seguimiento de Estándar           [Página 6]
+
+RFC 9999                        BTP/1.0                        Mayo 2016
+
+
 8 Conexiones
 
 8.1 Conexión persistente
@@ -339,6 +382,14 @@ que este otro router se encargue de hacerlo llegar a su destino.
    [49] Troost, R., Dorner, S. and K. Moore, "Communicating Presentation
         Information in Internet Messages: The Content-Disposition Header
         Field", RFC 2183, August 1997.
+
+
+
+
+
+Daniel Solís, et al.        Seguimiento de Estándar           [Página 7]
+
+RFC 9999                        BTP/1.0                        Mayo 2016
 
 
 
